@@ -86,8 +86,8 @@ def add_countertop_prompts(assembly):
     assembly.add_prompt("Countertop Overhang Left",'DISTANCE',pc_unit.millimeter(0))
     assembly.add_prompt("Countertop Overhang Right",'DISTANCE',pc_unit.millimeter(0))
     assembly.add_prompt("Add Backsplash",'CHECKBOX',True)
-    assembly.add_prompt("Add Left Backsplash",'CHECKBOX',False)
-    assembly.add_prompt("Add Right Backsplash",'CHECKBOX',False)
+    assembly.add_prompt("Add Left Backsplash",'CHECKBOX',True)
+    assembly.add_prompt("Add Right Backsplash",'CHECKBOX',True)
     assembly.add_prompt("Side Splash Setback",'DISTANCE',pc_unit.millimeter(80))
     assembly.add_prompt("Deck Thickness",'DISTANCE',props.countertop_thickness)
     assembly.add_prompt("Splash Thickness",'DISTANCE',pc_unit.millimeter(18))    
@@ -131,7 +131,7 @@ def add_interior_shelf_prompts(assembly):
     assembly.add_prompt("Shelf Quantity",'QUANTITY',1) 
     assembly.add_prompt("Shelf Setback",'DISTANCE',pc_unit.millimeter(10))  
     assembly.add_prompt("Shelf Clip Gap",'DISTANCE',pc_unit.millimeter(1))  
-    # assembly.add_prompt("Material Thickness",'DISTANCE',pc_unit.millimeter(18)) 
+    assembly.add_prompt("Material Thickness",'DISTANCE',pc_unit.millimeter(18)) 
 
 def add_thickness_prompts(assembly):
     props = utils_cabinet.get_scene_props(bpy.context.scene)

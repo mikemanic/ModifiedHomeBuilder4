@@ -281,9 +281,9 @@ class Closet_Starter(Closet):
         height = self.obj_z.pyclone.get_var('location.z','height')
         depth = self.obj_y.pyclone.get_var('location.y','depth')
         ctop_thickness = self.add_prompt("Countertop Thickness",'DISTANCE',props.countertop_thickness) 
-        ctop_overhang_front = self.add_prompt("Countertop Overhang Front",'DISTANCE',pc_unit.inch(1.5)) 
-        ctop_overhang_left = self.add_prompt("Countertop Overhang Left",'DISTANCE',pc_unit.inch(0)) 
-        ctop_overhang_right = self.add_prompt("Countertop Overhang Right",'DISTANCE',pc_unit.inch(0)) 
+        ctop_overhang_front = self.add_prompt("Countertop Overhang Front",'DISTANCE',pc_unit.millimeter(30)) 
+        ctop_overhang_left = self.add_prompt("Countertop Overhang Left",'DISTANCE',pc_unit.millimeter(0)) 
+        ctop_overhang_right = self.add_prompt("Countertop Overhang Right",'DISTANCE',pc_unit.millimeter(0)) 
         ctop_thickness_var = ctop_thickness.get_var("ctop_thickness_var")
         ctop_overhang_front_var = ctop_overhang_front.get_var("ctop_overhang_front_var")
         ctop_overhang_left_var = ctop_overhang_left.get_var("ctop_overhang_left_var")
@@ -564,13 +564,13 @@ class Closet_Starter(Closet):
         holes.dim_y('opening_depth',[opening_depth])
         holes.dim_z('opening_height',[opening_height])
         dim_from_bottom = holes.get_prompt("Shelf Hole Dim From Bottom")
-        dim_from_bottom.set_value(pc_unit.millimeter(9.525))
+        dim_from_bottom.set_value(pc_unit.millimeter(250))
         dim_from_top = holes.get_prompt("Shelf Hole Dim From Top")
-        dim_from_top.set_value(0)
+        dim_from_top.set_value(pc_unit.millimeter(250))
         dim_from_front = holes.get_prompt("Shelf Hole Dim From Front")
-        dim_from_front.set_value(pc_unit.inch(2))
+        dim_from_front.set_value(pc_unit.millimeter(50))
         dim_from_rear = holes.get_prompt("Shelf Hole Dim From Rear")
-        dim_from_rear.set_value(pc_unit.inch(2))
+        dim_from_rear.set_value(pc_unit.millimeter(40))
         return holes
 
     def add_left_filler(self):
@@ -705,7 +705,7 @@ class Closet_Starter(Closet):
         prompts_cabinet.add_closet_toe_kick_prompts(self)
         panel_thickness_var = self.get_prompt("Panel Thickness").get_var("panel_thickness_var")
         
-        self.add_prompt("Drill Start Location",'DISTANCE',pc_unit.inch(.35)) 
+        self.add_prompt("Drill Start Location",'DISTANCE',pc_unit.millimeter(10)) 
         self.add_prompt("Left Finished End",'CHECKBOX',False)  
         self.add_prompt("Right Finished End",'CHECKBOX',False)   
         self.add_prompt("Left End Condition",'COMBOBOX',0,["EP","WP","CP","OFF"]) 
@@ -716,8 +716,8 @@ class Closet_Starter(Closet):
         self.add_prompt("Right Offset",'DISTANCE',0)        
         self.add_prompt("Bridge Left",'CHECKBOX',False) 
         self.add_prompt("Bridge Right",'CHECKBOX',False) 
-        self.add_prompt("Left Bridge Shelf Width",'DISTANCE',pc_unit.inch(14))
-        self.add_prompt("Right Bridge Shelf Width",'DISTANCE',pc_unit.inch(14))
+        self.add_prompt("Left Bridge Shelf Width",'DISTANCE',pc_unit.millimeter(450))
+        self.add_prompt("Right Bridge Shelf Width",'DISTANCE',pc_unit.millimeter(450))
         self.add_prompt("Extend Panels to Countertop",'CHECKBOX',False)   
         self.add_prompt("Extend Panel Amount",'DISTANCE',props.extend_panel_amount)
 
@@ -966,7 +966,7 @@ class Closet_Inside_Corner(Closet):
             depth = props.tall_cabinet_depth
 
         self.add_prompt("Drill Start Location",'DISTANCE',pc_unit.inch(.35))
-        self.add_prompt("Back Width",'DISTANCE',pc_unit.inch(6))
+        self.add_prompt("Back Width",'DISTANCE',pc_unit.millimeter(150))
         self.add_prompt("Left Depth",'DISTANCE',depth)
         self.add_prompt("Right Depth",'DISTANCE',depth)
         self.add_prompt("Shelf Wall Offset Amount",'DISTANCE',pc_unit.inch(.5))
@@ -980,7 +980,7 @@ class Closet_Inside_Corner(Closet):
         if self.is_base:
             prompts_cabinet.add_countertop_prompts(self)
             self.add_prompt("Add Countertop",'CHECKBOX',self.is_base) 
-            self.add_prompt("Countertop Thickness",'DISTANCE',pc_unit.inch(1.5)) 
+            self.add_prompt("Countertop Thickness",'DISTANCE',pc_unit.millimeter(38)) 
 
         if not self.is_hanging:
             prompts_cabinet.add_closet_toe_kick_prompts(self)

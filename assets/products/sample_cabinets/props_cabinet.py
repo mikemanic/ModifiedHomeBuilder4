@@ -246,7 +246,7 @@ class HB_Cabinet_Scene_Props(PropertyGroup):
 
     add_shelves_to_interior: BoolProperty(name="Add Shelves to Interior", 
                                           description="Check this to add shelves to cabinet interiors", 
-                                          default=False)
+                                          default=True)
 
     countertop_backsplash_height: bpy.props.FloatProperty(name="Coutnertop Backsplash Height",
                                                           description="Enter the Height for the Countertop Backsplash",

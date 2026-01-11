@@ -469,12 +469,12 @@ class Built_In_Oven(pc_types.Assembly):
         self.obj_bp["MENU_ID"] = "HOME_BUILDER_MT_appliance_commands"  
         self.obj_y['IS_MIRROR'] = True
 
-        self.add_prompt("Material Thickness",'DISTANCE',pc_unit.inch(.75))
+        self.add_prompt("Material Thickness",'DISTANCE',pc_unit.millimeter(18))
         self.add_prompt("Remove Filler",'CHECKBOX',False)
-        self.add_prompt("Appliance Left Offset",'DISTANCE',pc_unit.inch(.75))
-        self.add_prompt("Appliance Right Offset",'DISTANCE',pc_unit.inch(.75))
-        self.add_prompt("Appliance Top Offset",'DISTANCE',pc_unit.inch(.75))
-        self.add_prompt("Appliance Bottom Offset",'DISTANCE',pc_unit.inch(.75))
+        self.add_prompt("Appliance Left Offset",'DISTANCE',pc_unit.millimeter(18))
+        self.add_prompt("Appliance Right Offset",'DISTANCE',pc_unit.millimeter(18))
+        self.add_prompt("Appliance Top Offset",'DISTANCE',pc_unit.millimeter(18))
+        self.add_prompt("Appliance Bottom Offset",'DISTANCE',pc_unit.millimeter(18))
 
         path = os.path.join(paths_cabinet.get_built_in_oven_paths(),'_Sample','Built In Oven.blend')
 
@@ -533,12 +533,12 @@ class Built_In_Microwave(pc_types.Assembly):
         self.obj_bp["MENU_ID"] = "HOME_BUILDER_MT_appliance_commands"  
         self.obj_y['IS_MIRROR'] = True
 
-        self.add_prompt("Material Thickness",'DISTANCE',pc_unit.inch(.75))
+        self.add_prompt("Material Thickness",'DISTANCE',pc_unit.millimeter(18))
         self.add_prompt("Remove Filler",'CHECKBOX',False)
-        self.add_prompt("Appliance Left Offset",'DISTANCE',pc_unit.inch(.75))
-        self.add_prompt("Appliance Right Offset",'DISTANCE',pc_unit.inch(.75))
-        self.add_prompt("Appliance Top Offset",'DISTANCE',pc_unit.inch(.75))
-        self.add_prompt("Appliance Bottom Offset",'DISTANCE',pc_unit.inch(.75))
+        self.add_prompt("Appliance Left Offset",'DISTANCE',pc_unit.millimeter(18))
+        self.add_prompt("Appliance Right Offset",'DISTANCE',pc_unit.millimeter(18))
+        self.add_prompt("Appliance Top Offset",'DISTANCE',pc_unit.millimeter(18))
+        self.add_prompt("Appliance Bottom Offset",'DISTANCE',pc_unit.millimeter(18))
 
         path = os.path.join(paths_cabinet.get_built_in_microwave_paths(),'_Sample','Built In Microwave.blend')
 

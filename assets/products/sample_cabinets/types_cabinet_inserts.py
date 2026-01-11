@@ -34,7 +34,8 @@ class Closet_Insert(pc_types.Assembly):
         opening.rot_y(value = 0)
         opening.rot_z(value = 0)
         opening.dim_x('width',[width])
-        opening.dim_y('depth-back_inset',[depth,back_inset])
+        opening.dim_y('depth',[depth])        
+        # opening.dim_y('depth-back_inset',[depth,back_inset])
         left_depth_p = opening.get_prompt("Left Depth")
         left_depth_p.set_formula('left_depth',[left_depth])
         right_depth_p = opening.get_prompt("Right Depth")
@@ -74,7 +75,8 @@ class Shelves(Closet_Insert):
         r_depth = adj_shelf.get_prompt("Right Depth")
 
         adj_shelf.loc_x('IF(is_lock_shelf_var,0,shelf_clip_gap)',[shelf_clip_gap,is_lock_shelf_var])
-        adj_shelf.loc_y('depth-back_inset',[depth,back_inset])
+        adj_shelf.loc_y('depth',[depth])
+        # adj_shelf.loc_y('depth-back_inset',[depth,back_inset])
         adj_shelf.loc_z('((height-(shelf_thickness*shelf_qty))/(shelf_qty+1))',[height,shelf_thickness,shelf_qty])
         adj_shelf.rot_x(value = 0)
         adj_shelf.rot_y(value = 0)
@@ -101,13 +103,17 @@ class Shelves(Closet_Insert):
         self.obj_bp["PROMPT_ID"] = "hb_sample_cabinets.adj_shelves_prompts"
         self.obj_bp["MENU_ID"] = "HOME_BUILDER_MT_cabinet_insert_commands"
         
-        self.obj_x.location.x = pc_unit.inch(20)
-        self.obj_y.location.y = pc_unit.inch(12)
-        self.obj_z.location.z = pc_unit.inch(60)
+        # self.obj_x.location.x = pc_unit.inch(20)
+        # self.obj_y.location.y = pc_unit.inch(12)
+        # self.obj_z.location.z = pc_unit.inch(60)
+
+        self.obj_x.location.x = pc_unit.millimeter(500)
+        self.obj_y.location.y = pc_unit.millimeter(300)
+        self.obj_z.location.z = pc_unit.millimeter(1500)
 
         hb_props = utils_cabinet.get_scene_props(bpy.context.scene)
 
-        self.add_prompt("Shelf Thickness",'DISTANCE',pc_unit.inch(.75)) 
+        self.add_prompt("Shelf Thickness",'DISTANCE',pc_unit.millimeter(18)) 
         self.add_prompt("Shelf Clip Gap",'DISTANCE',hb_props.shelf_clip_gap) 
         self.add_prompt("Shelf Quantity",'QUANTITY',3) 
 
@@ -164,13 +170,17 @@ class Hanging_Rod(Closet_Insert):
         self.obj_bp["PROMPT_ID"] = "hb_sample_cabinets.hanging_rod_prompts"
         self.obj_bp["MENU_ID"] = "HOME_BUILDER_MT_cabinet_insert_commands"
 
-        self.obj_x.location.x = pc_unit.inch(20)
-        self.obj_y.location.y = pc_unit.inch(12)
-        self.obj_z.location.z = pc_unit.inch(60)
+        # self.obj_x.location.x = pc_unit.inch(20)
+        # self.obj_y.location.y = pc_unit.inch(12)
+        # self.obj_z.location.z = pc_unit.inch(60)
 
-        self.add_prompt("Hanging Rod Location From Top",'DISTANCE',pc_unit.inch(2.145)) 
-        self.add_prompt("Hanging Rod Setback",'DISTANCE',pc_unit.inch(2)) 
-        self.add_prompt("Shelf Thickness",'DISTANCE',pc_unit.inch(.75)) 
+        self.obj_x.location.x = pc_unit.millimeter(500)
+        self.obj_y.location.y = pc_unit.millimeter(300)
+        self.obj_z.location.z = pc_unit.millimeter(1500)
+
+        self.add_prompt("Hanging Rod Location From Top",'DISTANCE',pc_unit.millimeter(50)) 
+        self.add_prompt("Hanging Rod Setback",'DISTANCE',pc_unit.millimeter(250)) 
+        self.add_prompt("Shelf Thickness",'DISTANCE',pc_unit.millimeter(18)) 
 
         height = self.obj_z.pyclone.get_var('location.z','height')
         x = self.obj_x.pyclone.get_var('location.x','x')
@@ -237,13 +247,13 @@ class Slanted_Shoe_Shelf(Closet_Insert):
         
         self.obj_x.location.x = pc_unit.inch(20)
         self.obj_y.location.y = pc_unit.inch(12)
-        self.obj_z.location.z = pc_unit.inch(.75)
+        self.obj_z.location.z = pc_unit.millimeter(18)
 
-        self.add_prompt("Shelf Thickness",'DISTANCE',pc_unit.inch(.75)) 
-        self.add_prompt("Shelf Clip Gap",'DISTANCE',pc_unit.inch(1)) 
-        self.add_prompt("Shelf Setback",'DISTANCE',pc_unit.inch(0))
-        self.add_prompt("Shelf Lip Width",'DISTANCE',pc_unit.inch(2))
-        self.add_prompt("Metal Lip Width Inset",'DISTANCE',pc_unit.millimeter(19))
+        self.add_prompt("Shelf Thickness",'DISTANCE',pc_unit.millimeter(18)) 
+        self.add_prompt("Shelf Clip Gap",'DISTANCE',pc_unit.millimeter(50)) 
+        self.add_prompt("Shelf Setback",'DISTANCE',pc_unit.millimeter(0))
+        self.add_prompt("Shelf Lip Width",'DISTANCE',pc_unit.millimeter(50))
+        self.add_prompt("Metal Lip Width Inset",'DISTANCE',pc_unit.millimeter(18))
         self.add_prompt("Distance Between Shelves",'DISTANCE',pc_unit.inch(8))
         self.add_prompt("Space From Bottom",'DISTANCE',pc_unit.inch(0))
         self.add_prompt("Shelf Quantity",'QUANTITY',3) 
@@ -275,7 +285,8 @@ class Slanted_Shoe_Shelf(Closet_Insert):
         shelf.rot_y(value = 0)
         shelf.rot_z(value = 0)
         shelf.dim_x('width',[width])
-        shelf.dim_y('depth-back_inset',[depth,back_inset])
+        shelf.dim_y('depth',[depth])
+        # shelf.dim_y('depth-back_inset',[depth,back_inset])
         shelf.dim_z('s_thickness',[s_thickness])
         hide = shelf.get_prompt("Hide")
         hide.set_formula('turn_off_top_shelf',[turn_off_top_shelf])        
@@ -291,7 +302,8 @@ class Slanted_Shoe_Shelf(Closet_Insert):
             slanted_shelf.set_name("Slanted Shelf")
             slanted_shelf.obj_bp['IS_SLANTED_SHOE_SHELF'] = True
             slanted_shelf.loc_x(value = 0)
-            slanted_shelf.loc_y('depth-back_inset',[depth,back_inset])
+            slanted_shelf.loc_y('depth',[depth])
+            # slanted_shelf.loc_y('depth-back_inset',[depth,back_inset])
             if i == 1:
                 slanted_shelf.loc_z('((fabs(depth)-back_inset)*sin(angle))+bot_space',[depth,back_inset,angle,bot_space])
             else:
@@ -337,15 +349,15 @@ class Cubbies(Closet_Insert):
         
         self.obj_x.location.x = pc_unit.inch(20)
         self.obj_y.location.y = pc_unit.inch(12)
-        self.obj_z.location.z = pc_unit.inch(.75)
+        self.obj_z.location.z = pc_unit.millimeter(18)
 
         self.add_prompt("Cubby Placement",'COMBOBOX',0,["Bottom","Top","Fill"])
-        self.add_prompt("Shelf Thickness",'DISTANCE',pc_unit.inch(1)) 
-        self.add_prompt("Divider Thickness",'DISTANCE',pc_unit.inch(1)) 
+        self.add_prompt("Shelf Thickness",'DISTANCE',pc_unit.millimeter(18)) 
+        self.add_prompt("Divider Thickness",'DISTANCE',pc_unit.millimeter(18)) 
         self.add_prompt("Horizontal Quantity",'QUANTITY',2) 
         self.add_prompt("Vertical Quantity",'QUANTITY',2) 
         self.add_prompt("Cubby Setback",'DISTANCE',pc_unit.inch(.125)) 
-        self.add_prompt("Cubby Height",'DISTANCE',pc_unit.millimeter(556.95)) 
+        self.add_prompt("Cubby Height",'DISTANCE',pc_unit.millimeter(600)) 
         
         width = self.obj_x.pyclone.get_var('location.x','width')
         height = self.obj_z.pyclone.get_var('location.z','height')
@@ -371,7 +383,8 @@ class Cubbies(Closet_Insert):
         shelf.rot_y(value = 0)
         shelf.rot_z(value = 0)
         shelf.dim_x('width',[width])
-        shelf.dim_y('depth-back_inset',[depth,back_inset])
+        shelf.dim_y('depth',[depth])
+        # shelf.dim_y('depth-back_inset',[depth,back_inset])
         shelf.dim_z('-s_thickness',[s_thickness])
         hide = shelf.get_prompt('Hide')
         hide.set_formula('IF(placement==2,True,False)',[placement])
@@ -394,8 +407,9 @@ class Cubbies(Closet_Insert):
         v_cubby.rot_x(value = 0)
         v_cubby.rot_y(value = math.radians(-90))
         v_cubby.rot_z(value = 0)
-        v_cubby.dim_x('IF(placement==2,height,c_height)',[placement,height,c_height])
-        v_cubby.dim_y('depth-back_inset',[depth,back_inset])
+        v_cubby.dim_x('IF(placement==2,height,c_height)',[placement,height,c_height])        
+        v_cubby.dim_y('depth',[depth])
+        # v_cubby.dim_y('depth-back_inset',[depth,back_inset])
         v_cubby.dim_z('-d_thickness',[d_thickness])
         qty = v_cubby.get_prompt('Z Quantity')
         offset = v_cubby.get_prompt('Z Offset')
@@ -441,17 +455,21 @@ class Wire_Baskets(Closet_Insert):
         self.obj_bp['PROMPT_ID'] = 'hb_sample_cabinets.wire_baskets_prompts'
         self.obj_bp["MENU_ID"] = "HOME_BUILDER_MT_cabinet_insert_commands"
 
-        self.obj_x.location.x = pc_unit.inch(20)
-        self.obj_y.location.y = pc_unit.inch(12)
-        self.obj_z.location.z = pc_unit.inch(60)        
+        # self.obj_x.location.x = pc_unit.inch(20)
+        # self.obj_y.location.y = pc_unit.inch(12)
+        # self.obj_z.location.z = pc_unit.inch(60)
+
+        self.obj_x.location.x = pc_unit.millimeter(500)
+        self.obj_y.location.y = pc_unit.millimeter(300)
+        self.obj_z.location.z = pc_unit.millimeter(1500)       
 
         self.add_prompt("Wire Basket Quantity",'QUANTITY',3)
-        self.add_prompt("Wire Basket 1 Height",'DISTANCE',pc_unit.inch(6))
-        self.add_prompt("Wire Basket 2 Height",'DISTANCE',pc_unit.inch(6))
-        self.add_prompt("Wire Basket 3 Height",'DISTANCE',pc_unit.inch(6))
-        self.add_prompt("Wire Basket 4 Height",'DISTANCE',pc_unit.inch(6))
-        self.add_prompt("Wire Basket 5 Height",'DISTANCE',pc_unit.inch(6))
-        self.add_prompt("Wire Basket 6 Height",'DISTANCE',pc_unit.inch(6))
+        self.add_prompt("Wire Basket 1 Height",'DISTANCE',pc_unit.millimeter(150))
+        self.add_prompt("Wire Basket 2 Height",'DISTANCE',pc_unit.millimeter(150))
+        self.add_prompt("Wire Basket 3 Height",'DISTANCE',pc_unit.millimeter(150))
+        self.add_prompt("Wire Basket 4 Height",'DISTANCE',pc_unit.millimeter(150))
+        self.add_prompt("Wire Basket 5 Height",'DISTANCE',pc_unit.millimeter(150))
+        self.add_prompt("Wire Basket 6 Height",'DISTANCE',pc_unit.millimeter(150))
         self.add_prompt("Vertical Spacing",'DISTANCE',pc_unit.inch(3))
         
         prompts_cabinet.add_closet_thickness_prompts(self)
@@ -535,15 +553,19 @@ class Wine_Rack(Closet_Insert):
         self.obj_bp['PROMPT_ID'] = 'hb_sample_cabinets.wine_rack_prompts'
         self.obj_bp["MENU_ID"] = "HOME_BUILDER_MT_cabinet_insert_commands"
 
-        self.obj_x.location.x = pc_unit.inch(20)
-        self.obj_y.location.y = pc_unit.inch(12)
-        self.obj_z.location.z = pc_unit.inch(60)        
+        # self.obj_x.location.x = pc_unit.inch(20)
+        # elf.obj_y.location.y = pc_unit.inch(12)
+        # self.obj_z.location.z = pc_unit.inch(60)
+
+        self.obj_x.location.x = pc_unit.millimeter(500)
+        self.obj_y.location.y = pc_unit.millimeter(300)
+        self.obj_z.location.z = pc_unit.millimeter(1500)        
 
         self.add_prompt("Wine Rack Quantity",'QUANTITY',3)
-        self.add_prompt("Space From Bottom",'DISTANCE',pc_unit.inch(1))
-        self.add_prompt("Vertical Spacing",'DISTANCE',pc_unit.inch(6))
-        self.add_prompt("Wine Rack Setback",'DISTANCE',pc_unit.inch(2))
-        self.add_prompt("Wine Rack Depth",'DISTANCE',pc_unit.inch(10))
+        self.add_prompt("Space From Bottom",'DISTANCE',pc_unit.millimeter(15))
+        self.add_prompt("Vertical Spacing",'DISTANCE',pc_unit.millimeter(150))
+        self.add_prompt("Wine Rack Setback",'DISTANCE',pc_unit.millimeter(40))
+        self.add_prompt("Wine Rack Depth",'DISTANCE',pc_unit.millimeter(250))
 
         prompts_cabinet.add_closet_thickness_prompts(self)
 
@@ -614,7 +636,8 @@ class Vertical_Splitter(Closet_Insert):
             splitter.rot_y(value = 0)
             splitter.rot_z(value = 0)
             splitter.dim_x('width',[width])
-            splitter.dim_y('depth-back_inset',[depth,back_inset])
+            splitter.dim_y('depth',[depth])
+            # splitter.dim_y('depth-back_inset',[depth,back_inset])
             splitter.dim_z('s_thickness',[s_thickness])
             # left_depth_p = splitter.get_prompt("Left Depth")
             # left_depth_p.set_formula('left_depth',[left_depth])
@@ -646,9 +669,9 @@ class Vertical_Splitter(Closet_Insert):
         
         self.obj_x.location.x = pc_unit.inch(20)
         self.obj_y.location.y = pc_unit.inch(12)
-        self.obj_z.location.z = pc_unit.inch(.75)
+        self.obj_z.location.z = pc_unit.millimeter(18)
 
-        shelf_thickness = self.add_prompt("Shelf Thickness",'DISTANCE',pc_unit.inch(.75)) 
+        shelf_thickness = self.add_prompt("Shelf Thickness",'DISTANCE',pc_unit.millimeter(18)) 
 
         height = self.obj_z.pyclone.get_var('location.z','height')
         s_thickness = shelf_thickness.get_var('s_thickness')
@@ -714,7 +737,8 @@ class Horizontal_Splitter(Closet_Insert):
             splitter.rot_y(value = math.radians(-90))
             splitter.rot_z(value = 0)
             splitter.dim_x('height',[height])
-            splitter.dim_y('depth-back_inset',[depth,back_inset])
+            splitter.dim_y('depth',[depth])
+            # splitter.dim_y('depth-back_inset',[depth,back_inset])
             splitter.dim_z('d_thickness',[d_thickness])
 
             previous_splitter = splitter
@@ -744,9 +768,9 @@ class Horizontal_Splitter(Closet_Insert):
         
         self.obj_x.location.x = pc_unit.inch(20)
         self.obj_y.location.y = pc_unit.inch(12)
-        self.obj_z.location.z = pc_unit.inch(.75)
+        self.obj_z.location.z = pc_unit.millimeter(18)
 
-        self.add_prompt("Division Thickness",'DISTANCE',pc_unit.inch(.75)) 
+        self.add_prompt("Division Thickness",'DISTANCE',pc_unit.millimeter(18)) 
 
         width = self.obj_x.pyclone.get_var('location.x','width')
         d_thickness = self.get_prompt("Division Thickness").get_var('d_thickness')

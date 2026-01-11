@@ -148,7 +148,7 @@ def add_shelf_holes(assembly):
     part.obj_y.empty_display_size = .001
     part.obj_z.empty_display_size = .001
     part.obj_prompts.empty_display_size = .001   
-    material_pointers_cabinet.assign_pointer_to_assembly(part,"Shelf Holes")
+    material_pointers_cabinet.assign_pointer_to_assembly(part,"ButPolita")
     return part    
 
 def add_corner_notch_countertop_part(assembly):

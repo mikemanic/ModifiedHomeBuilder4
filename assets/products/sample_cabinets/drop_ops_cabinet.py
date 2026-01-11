@@ -1292,7 +1292,7 @@ class hb_sample_cabinets_OT_drop_adj_shelf(bpy.types.Operator):
     def create_part(self,context):
         path = os.path.join(paths_cabinet.get_assembly_path(),"Part.blend")
         self.part = pc_types.Assembly(filepath=path)
-        self.part.obj_z.location.z = pc_unit.inch(.75)
+        self.part.obj_z.location.z = pc_unit.millimeter(18)
 
         self.exclude_objects.append(self.part.obj_bp)
         for obj in self.part.obj_bp.children:
@@ -1477,8 +1477,8 @@ class hb_sample_cabinets_OT_drop_cleat(bpy.types.Operator):
     def create_part(self,context):
         path = os.path.join(paths_cabinet.get_assembly_path(),"Part.blend")
         self.part = pc_types.Assembly(filepath=path)
-        self.part.obj_z.location.z = pc_unit.inch(.75)
-        self.part.add_prompt("Cleat Inset",'DISTANCE',pc_unit.inch(0))
+        self.part.obj_z.location.z = pc_unit.millimeter(18)
+        self.part.add_prompt("Cleat Inset",'DISTANCE',pc_unit.millimeter(0))
 
         self.exclude_objects.append(self.part.obj_bp)
         for obj in self.part.obj_bp.children:
@@ -1639,7 +1639,7 @@ class hb_sample_cabinets_OT_drop_back(bpy.types.Operator):
             self.part.obj_bp.rotation_euler.y = math.radians(-90)
             self.part.obj_x.location.x = opening.obj_z.location.z
             self.part.obj_y.location.y = opening.obj_x.location.x
-            self.part.obj_z.location.z = -pc_unit.inch(.75)
+            self.part.obj_z.location.z = -pc_unit.millimeter(18)
             return opening
 
         return None
@@ -1647,8 +1647,8 @@ class hb_sample_cabinets_OT_drop_back(bpy.types.Operator):
     def create_part(self,context):
         path = os.path.join(paths_cabinet.get_assembly_path(),"Part.blend")
         self.part = pc_types.Assembly(filepath=path)
-        self.part.obj_z.location.z = pc_unit.inch(.75)
-        self.part.add_prompt('Back Inset','DISTANCE',value=pc_unit.inch(.25))
+        self.part.obj_z.location.z = pc_unit.millimeter(18)
+        self.part.add_prompt('Back Inset','DISTANCE',value=pc_unit.millimeter(10))
 
         self.exclude_objects.append(self.part.obj_bp)
         for obj in self.part.obj_bp.children:
@@ -1853,7 +1853,7 @@ class hb_sample_cabinets_OT_drop_single_fixed_shelf_part(bpy.types.Operator):
     def create_part(self,context):
         path = os.path.join(paths_cabinet.get_assembly_path(),"Part.blend")
         self.part = pc_types.Assembly(filepath=path)
-        self.part.obj_z.location.z = pc_unit.inch(.75)
+        self.part.obj_z.location.z = pc_unit.millimeter(18)
 
         self.exclude_objects.append(self.part.obj_bp)
         for obj in self.part.obj_bp.children:

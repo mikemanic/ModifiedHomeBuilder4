@@ -459,60 +459,78 @@ def position_cabinet_on_object(mouse_location,cabinet,selected_obj,cursor_z,sele
     # without more context on how \'first\' is determined. For now, the 3mm offset is applied
     # to all suspended closets in position_closet_on_wall.    return "OBJECT"
 
-def position_corner_unit_on_wall(cabinet,wall,placement_obj,mouse_location,selected_normal,height_above_floor):
+def position_corner_unit_on_wall(
+        cabinet,
+        wall,
+        placement_obj,
+        mouse_location,
+        selected_normal,
+        height_above_floor
+    ):
+
     placement = 'WALL'
-    
+
+    # Parent objects
     cabinet.obj_bp.parent = wall.obj_bp
+    placement_obj.parent = wall.obj_bp
+
+    # Set initial XY from mouse
     cabinet.obj_bp.matrix_world[0][3] = mouse_location[0]
     cabinet.obj_bp.matrix_world[1][3] = mouse_location[1]
-    placement_obj.parent = wall.obj_bp
     placement_obj.matrix_world[0][3] = mouse_location[0]
-    placement_obj.matrix_world[1][3] = mouse_location[1] 
-    # Adjust Y-placement based on cabinet type
-    # Base cabinets get 50mm overhang at ground level (height_above_floor == 0)
-    # Tall and Upper cabinets get 3mm offset
-    cabinet_type = cabinet.get_prompt("Cabinet Type").get_value()
-    
-    if cabinet_type == 'Base' and height_above_floor == 0:
-        cabinet.obj_bp.location.y = -0.05 # 50mm rear overhang (Blender units are meters)
-    elif cabinet_type in ('Tall', 'Upper'):
-        cabinet.obj_bp.location.y = -0.003 # 3mm offset (Blender units are meters)
-    else:
-        cabinet.obj_bp.location.y = 0   
+    placement_obj.matrix_world[1][3] = mouse_location[1]
 
+    # ---------------------------------------------------
+    # SAFE CABINET TYPE RESOLUTION (NO CRASH POSSIBLE)
+    # ---------------------------------------------------
+    cabinet_type = None
+    cabinet_type_prompt = cabinet.get_prompt("Cabinet Type")
+
+    if cabinet_type_prompt is not None:
+        cabinet_type = cabinet_type_prompt.get_value()
+
+    # ---------------------------------------------------
+    # Y OFFSET BASED ON CABINET TYPE
+    # ---------------------------------------------------
+    # Base cabinets get 50mm rear overhang when on floor
+    # Tall / Upper cabinets get 3mm offset
+    if cabinet_type == 'Base' and height_above_floor == 0:
+        cabinet.obj_bp.location.y = -0.05
+    elif cabinet_type in ('Tall', 'Upper'):
+        cabinet.obj_bp.location.y = -0.003
+    else:
+        cabinet.obj_bp.location.y = 0
+
+    # ---------------------------------------------------
+    # WALL / CABINET DIMENSIONS
+    # ---------------------------------------------------
     wall_length = wall.obj_x.location.x
     cabinet_width = cabinet.obj_x.location.x
     x_loc = cabinet.obj_bp.location.x
 
-    #SNAP TO LEFT
-    if x_loc < .25:
+    # ---------------------------------------------------
+    # SNAP TO LEFT
+    # ---------------------------------------------------
+    if x_loc < 0.25:
         placement = "WALL_LEFT"
-        cabinet.obj_bp.rotation_euler.z = math.radians(0)
+        cabinet.obj_bp.rotation_euler.z = 0
         cabinet.obj_bp.location.x = 0
 
-    #SNAP TO RIGHT
-    if x_loc > wall_length - cabinet_width:
+    # ---------------------------------------------------
+    # SNAP TO RIGHT
+    # ---------------------------------------------------
+    elif x_loc > wall_length - cabinet_width:
         placement = "WALL_RIGHT"
         cabinet.obj_bp.rotation_euler.z = math.radians(-90)
         cabinet.obj_bp.location.x = wall_length
 
-    #TODO: GET NEXT PRODUCT AND UPDATE LOCATION AND SIZE
-
-    # if selected_normal.y == 1:
-    #     #BACK SIDE OF WALL
-    #     cabinet.obj_bp.rotation_euler.z = math.radians(180)
-    # else:
-    #     cabinet.obj_bp.rotation_euler.z = 0
+    # ---------------------------------------------------
+    # Z HEIGHT
+    # ---------------------------------------------------
     cabinet.obj_bp.location.z = height_above_floor
 
-    # Additional check for initial placement of a cabinet (not closet) if it\'s the first one
-    # This logic is a placeholder as detecting \'first\' is complex without global state or more context
-    # For a simple interpretation, if it\'s a ground cabinet and \'height_above_floor\' is 0, apply the overhang.
-    # This is already handled above, but keeping this comment for clarity of intent.
-    # The user\'s request for \'first suspended cabinet\' is difficult to implement precisely here
-    # without more context on how \'first\' is determined. For now, the 3mm offset is applied
-    # to all suspended closets in position_closet_on_wall.
     return placement
+
 
 def position_closet_on_wall(closet,wall,placement_obj,mouse_location):
     # Adjust Y-placement for suspended cabinets (3mm offset from wall)

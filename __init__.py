@@ -41,7 +41,7 @@ bl_info = {
     "version": (4, 0, 4),
     "blender": (4, 5, 3),
     "location": "3D Viewport Sidebar",
-    "description": "Library designed to help with interior design",
+    "description": "Library designed to help with interior design in Metric for use in EU",
     "warning": "",
     "wiki_url": "",
     "category": "Asset Library",

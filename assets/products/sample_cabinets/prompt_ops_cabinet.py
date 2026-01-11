@@ -669,9 +669,9 @@ class hb_sample_cabinets_OT_cabinet_prompts(bpy.types.Operator):
             blind_panel_location = carcass.get_prompt("Blind Panel Location")
             blind_panel_width = carcass.get_prompt("Blind Panel Width")
             blind_panel_reveal = carcass.get_prompt("Blind Panel Reveal")
-            # add_bottom_light = carcass.get_prompt("Add Bottom Light")
-            # add_top_light = carcass.get_prompt("Add Top Light")
-            # add_side_light = carcass.get_prompt("Add Side Light")
+            add_bottom_light = carcass.get_prompt("Add Bottom Light")
+            add_top_light = carcass.get_prompt("Add Top Light")
+            add_side_light = carcass.get_prompt("Add Side Light")
   
             col = layout.column(align=True)
             box = col.box()
@@ -703,12 +703,12 @@ class hb_sample_cabinets_OT_cabinet_prompts(bpy.types.Operator):
                 row.prop(finished_bottom,'checkbox_value',text="Bottom")
                 row.prop(finished_back,'checkbox_value',text="Back")
 
-            # if add_bottom_light and add_top_light and add_side_light:
-            #     row = box.row()
-            #     row.label(text="Cabinet Lighting:")   
-            #     row.prop(add_bottom_light,'checkbox_value',text="Bottom")
-            #     row.prop(add_top_light,'checkbox_value',text="Top")
-            #     row.prop(add_side_light,'checkbox_value',text="Side")  
+            if add_bottom_light and add_top_light and add_side_light:
+                 row = box.row()
+                 row.label(text="Cabinet Lighting:")   
+                 row.prop(add_bottom_light,'checkbox_value',text="Bottom")
+                 row.prop(add_top_light,'checkbox_value',text="Top")
+                 row.prop(add_side_light,'checkbox_value',text="Side")  
 
     def draw_cabinet_prompts(self,layout,context):
         bottom_cabinet_height = self.cabinet.get_prompt("Bottom Cabinet Height")    
@@ -1787,7 +1787,7 @@ class hb_sample_cabinets_OT_inside_corner_cabinet_prompts(bpy.types.Operator):
         for i in range(1,9):
             opening_height_prompt = self.closet.get_prompt("Opening " + str(i) + " Height")
             if opening_height_prompt:
-                opening_height = round(pc_unit.meter_to_millimeter(opening_height_prompt.get_value()),0)
+                opening_height = round(pc_unit.meter_to_millimeter(opening_height_prompt.get_value()),0 + 'mm')
                 for index, height in enumerate(const.PANEL_HEIGHTS):
                     if not opening_height >= int(height[0]):
                         exec('self.opening_' + str(i) + '_height = const.PANEL_HEIGHTS[index - 1][0]')                                                                                                                                                                                                        

@@ -115,9 +115,13 @@ class Doors(types_fronts.Fronts):
         self.obj_bp["PROMPT_ID"] = "hb_sample_cabinets.door_prompts"
         self.obj_bp["MENU_ID"] = "HOME_BUILDER_MT_cabinet_insert_commands"
 
-        self.obj_x.location.x = pc_unit.inch(20)
-        self.obj_y.location.y = pc_unit.inch(12)
-        self.obj_z.location.z = pc_unit.inch(60)
+        # self.obj_x.location.x = pc_unit.inch(20)
+        # elf.obj_y.location.y = pc_unit.inch(12)
+        # elf.obj_z.location.z = pc_unit.inch(60)
+        
+        self.obj_x.location.x = pc_unit.millimeter(500)
+        self.obj_y.location.y = pc_unit.millimeter(300)
+        self.obj_z.location.z = pc_unit.millimeter(1500)
 
         to, bo, lo, ro = self.add_overlay_prompts()
 
@@ -251,9 +255,13 @@ class Drawers(types_fronts.Fronts):
         self.obj_bp['PROMPT_ID'] = 'hb_sample_cabinets.drawer_prompts'
         # self.obj_bp["MENU_ID"] = "HOME_BUILDER_MT_closet_insert_commands"
 
-        self.obj_x.location.x = pc_unit.inch(20)
-        self.obj_y.location.y = pc_unit.inch(12)
-        self.obj_z.location.z = pc_unit.inch(60)
+        # self.obj_x.location.x = pc_unit.inch(20)
+        # self.obj_y.location.y = pc_unit.inch(12)
+        # self.obj_z.location.z = pc_unit.inch(60)
+
+        self.obj_x.location.x = pc_unit.millimeter(500)
+        self.obj_y.location.y = pc_unit.millimeter(300)
+        self.obj_z.location.z = pc_unit.millimeter(1500)
 
         self.add_prompts(include_door_prompts=False,include_drawer_prompts=True)
         self.add_prompt("Drawer Quantity",'QUANTITY',3)
@@ -346,7 +354,7 @@ class Door_Drawer(types_fronts.Fronts):
         add_two_drawer_fronts = self.add_prompt("Add Two Drawer Fronts",'CHECKBOX',self.two_drawers)
         add_two_drawer_fronts_var = add_two_drawer_fronts.get_var('add_two_drawer_fronts_var')
 
-        top_df_height = self.add_prompt("Top Drawer Front Height",'DISTANCE',pc_unit.inch(6))
+        top_df_height = self.add_prompt("Top Drawer Front Height",'DISTANCE',pc_unit.millimeter(140))
         top_df_height_var = top_df_height.get_var('top_df_height_var')
 
         carcass_type = self.get_prompt("Carcass Type")
