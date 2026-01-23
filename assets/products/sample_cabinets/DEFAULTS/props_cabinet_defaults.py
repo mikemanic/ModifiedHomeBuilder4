@@ -247,6 +247,10 @@ class HB_Cabinet_Scene_Props(PropertyGroup):
     add_shelves_to_interior: BoolProperty(name="Add Shelves to Interior", 
                                           description="Check this to add shelves to cabinet interiors", 
                                           default=True)
+    
+    show_shelf_holes: bpy.props.BoolProperty(name="Show Shelf Holes",
+                                              description="Check this to display shelf holes in the cabinet interior.",
+                                              default=True)
 
     countertop_backsplash_height: bpy.props.FloatProperty(name="Coutnertop Backsplash Height",
                                                           description="Enter the Height for the Countertop Backsplash",
@@ -359,7 +363,7 @@ class HB_Cabinet_Scene_Props(PropertyGroup):
 
     adj_shelf_setback: bpy.props.FloatProperty(name="Adjustable Shelf Setback",
                                                  description="Default setback for adjustable shelves",
-                                                 default=pc_unit.millimeter(0),
+                                                 default=pc_unit.millimeter(10),
                                                  unit='LENGTH')
 
     fixed_shelf_setback: bpy.props.FloatProperty(name="Fixed Shelf Setback",

@@ -277,13 +277,15 @@ class Closet_Starter(Closet):
 
     def add_countertop(self):
         props = utils_cabinet.get_scene_props(bpy.context.scene)
-        width = self.obj_x.pyclone.get_var('location.x','width')
-        height = self.obj_z.pyclone.get_var('location.z','height')
-        depth = self.obj_y.pyclone.get_var('location.y','depth')
-        ctop_thickness = self.add_prompt("Countertop Thickness",'DISTANCE',props.countertop_thickness) 
-        ctop_overhang_front = self.add_prompt("Countertop Overhang Front",'DISTANCE',pc_unit.millimeter(30)) 
-        ctop_overhang_left = self.add_prompt("Countertop Overhang Left",'DISTANCE',pc_unit.millimeter(0)) 
-        ctop_overhang_right = self.add_prompt("Countertop Overhang Right",'DISTANCE',pc_unit.millimeter(0)) 
+        width = self.obj_x.pyclone.get_var('location.x', 'width')
+        height = self.obj_z.pyclone.get_var('location.z', 'height')
+        depth = self.obj_y.pyclone.get_var('location.y', 'depth')
+
+        ctop_thickness = self.add_prompt("Countertop Thickness", 'DISTANCE', props.countertop_thickness)
+        ctop_overhang_front = self.add_prompt("Countertop Overhang Front", 'DISTANCE', pc_unit.millimeter(30))
+        ctop_overhang_left = self.add_prompt("Countertop Overhang Left", 'DISTANCE', pc_unit.millimeter(0))
+        ctop_overhang_right = self.add_prompt("Countertop Overhang Right", 'DISTANCE', pc_unit.millimeter(0))
+
         ctop_thickness_var = ctop_thickness.get_var("ctop_thickness_var")
         ctop_overhang_front_var = ctop_overhang_front.get_var("ctop_overhang_front_var")
         ctop_overhang_left_var = ctop_overhang_left.get_var("ctop_overhang_left_var")
@@ -292,15 +294,15 @@ class Closet_Starter(Closet):
         ctop = assemblies_cabinet.add_countertop_part(self)
         ctop.obj_bp["IS_COUNTERTOP_BP"] = True
         ctop.set_name('Countertop')
-        ctop.loc_x('-ctop_overhang_left_var',[ctop_overhang_left_var])
-        ctop.loc_y(value = 0)
-        ctop.loc_z('height',[height])
-        ctop.rot_x(value = 0)
-        ctop.rot_y(value = 0)
-        ctop.rot_z(value = 0)
-        ctop.dim_x('width+ctop_overhang_left_var+ctop_overhang_right_var',[width,ctop_overhang_left_var,ctop_overhang_right_var])
-        ctop.dim_y('depth-ctop_overhang_front_var',[depth,ctop_overhang_front_var])
-        ctop.dim_z('ctop_thickness_var',[ctop_thickness_var])
+        ctop.loc_x('-ctop_overhang_left_var', [ctop_overhang_left_var])
+        ctop.loc_y(value=0)
+        ctop.loc_z('height', [height])
+        ctop.rot_x(value=0)
+        ctop.rot_y(value=0)
+        ctop.rot_z(value=0)
+        ctop.dim_x('width+ctop_overhang_left_var+ctop_overhang_right_var', [width, ctop_overhang_left_var, ctop_overhang_right_var])
+        ctop.dim_y('depth-ctop_overhang_front_var', [depth, ctop_overhang_front_var])
+        ctop.dim_z('ctop_thickness_var', [ctop_thickness_var])
         ctop.obj_bp.hide_viewport = True
         ctop.obj_x.hide_viewport = True
         ctop.obj_y.hide_viewport = True
@@ -979,8 +981,8 @@ class Closet_Inside_Corner(Closet):
 
         if self.is_base:
             prompts_cabinet.add_countertop_prompts(self)
-            self.add_prompt("Add Countertop",'CHECKBOX',self.is_base) 
-            self.add_prompt("Countertop Thickness",'DISTANCE',pc_unit.millimeter(38)) 
+            self.add_prompt("Add Blat",'CHECKBOX',self.is_base) 
+            self.add_prompt("Blat Thickness",'DISTANCE',pc_unit.millimeter(38)) 
 
         if not self.is_hanging:
             prompts_cabinet.add_closet_toe_kick_prompts(self)

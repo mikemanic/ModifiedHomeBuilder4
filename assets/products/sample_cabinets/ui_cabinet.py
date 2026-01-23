@@ -164,7 +164,10 @@ class HOME_BUILDER_PT_cabinet_construction(bpy.types.Panel):
         box.label(text="Cabinet Interior:")
         row = box.row(align=True)
         row.label(text="Add Shelves to Interiors:")    
-        row.prop(props,'add_shelves_to_interior',text="")  
+        row.prop(props,'add_shelves_to_interior',text="")       
+        row = box.row(align=True)
+        row.label(text="Show Shelf Holes:")
+        row.prop(props,'show_shelf_holes',text="")
 
         box = layout.box()
         box.label(text="Cabinet Countertop:")

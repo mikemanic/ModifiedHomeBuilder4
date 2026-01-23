@@ -21,7 +21,7 @@ def add_cabinet_shelf(assembly,is_exposed=False):
     shelf.loc_x('shelf_clip_gap',[shelf_clip_gap])
     shelf.loc_y('shelf_setback',[shelf_setback])
     shelf.loc_z('(height-(material_thickness*shelf_qty))/(shelf_qty+1)',[height,material_thickness,shelf_qty])
-    shelf.dim_x('width-(shelf_clip_gap*2)',[width,shelf_clip_gap])
+    shelf.dim_x('width-shelf_clip_gap',[width,shelf_clip_gap])
     shelf.dim_y('depth-shelf_setback',[depth,shelf_setback])
     shelf.dim_z('material_thickness',[material_thickness])
     z_quantity = shelf.get_prompt("Z Quantity")

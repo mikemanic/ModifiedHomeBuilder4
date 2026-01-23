@@ -20,6 +20,24 @@ def add_design_carcass(assembly,exposed_interior=False):
     material_pointers_cabinet.assign_materials_to_assembly(part)
     return part
 
+
+def add_base_design_carcass(assembly,exposed_interior=False):
+    part_path = path.join(paths_cabinet.get_assembly_path(),"Base Carcass.blend")
+    part = assembly.add_assembly_from_file(part_path)
+    part.obj_bp['IS_DESIGN_CARCASS_BP'] = True
+    assembly.add_assembly(part)
+    part.obj_bp.empty_display_size = .001
+    part.obj_x.empty_display_size = .001
+    part.obj_y.empty_display_size = .001
+    part.obj_z.empty_display_size = .001
+    part.obj_prompts.empty_display_size = .001    
+    if exposed_interior:
+        material_pointers_cabinet.assign_open_design_carcass_pointers(part)
+    else:
+        material_pointers_cabinet.assign_design_carcass_pointers(part)
+    material_pointers_cabinet.assign_materials_to_assembly(part)
+    return part
+
 def add_base_assembly(assembly):
     part_path = path.join(paths_cabinet.get_assembly_path(),"Design Base Assembly.blend")
     part = assembly.add_assembly_from_file(part_path)
@@ -109,20 +127,20 @@ def add_closet_part(assembly):
     material_pointers_cabinet.assign_materials_to_assembly(part)
     return part
 
-def add_closet_array_part(assembly):
-    part_path = path.join(paths_cabinet.get_assembly_path(),"Z Array Part.blend")
-    part = assembly.add_assembly_from_file(part_path)
-    part.obj_bp['IS_CUTPART_BP'] = True
-    assembly.add_assembly(part)     
-    part.obj_bp.empty_display_size = .001
-    part.obj_x.empty_display_size = .001
-    part.obj_y.empty_display_size = .001
-    part.obj_z.empty_display_size = .001
-    part.obj_prompts.empty_display_size = .001    
-    pc_utils.add_bevel(part)
-    material_pointers_cabinet.assign_double_sided_pointers(part)
-    material_pointers_cabinet.assign_materials_to_assembly(part)
-    return part
+# def add_closet_array_part(assembly):
+    # part_path = path.join(paths_cabinet.get_assembly_path(),"Z Array Part.blend")
+    # part = assembly.add_assembly_from_file(part_path)
+    # part.obj_bp['IS_CUTPART_BP'] = True
+    # assembly.add_assembly(part)     
+    # part.obj_bp.empty_display_size = .001
+    # part.obj_x.empty_display_size = .001
+    # part.obj_y.empty_display_size = .001
+    # part.obj_z.empty_display_size = .001
+    # part.obj_prompts.empty_display_size = .001    
+    # pc_utils.add_bevel(part)
+    # material_pointers_cabinet.assign_double_sided_pointers(part)
+    # material_pointers_cabinet.assign_materials_to_assembly(part)
+    # return part
 
 def add_metal_shoe_shelf_part(assembly):
     part_path = path.join(paths_cabinet.get_assembly_path(),"Metal Shoe Shelf.blend")
@@ -325,3 +343,17 @@ def add_cage(assembly):
     part = assembly.add_assembly_from_file(part_path)
     assembly.add_assembly(part)
     return part    
+
+def add_drawer_box(assembly):
+    part_path = path.join(paths_cabinet.get_assembly_path(),"DrawerBox.blend")
+    part = assembly.add_assembly_from_file(part_path)
+    part.obj_bp['IS_DRAWER_BOX_BP'] = True
+    assembly.add_assembly(part)
+    part.obj_bp.empty_display_size = .001
+    part.obj_x.empty_display_size = .001
+    part.obj_y.empty_display_size = .001
+    part.obj_z.empty_display_size = .001
+    part.obj_prompts.empty_display_size = .001    
+    material_pointers_cabinet.assign_pointer_to_assembly(part,"Drawer Box")
+    material_pointers_cabinet.assign_materials_to_assembly(part)
+    return part

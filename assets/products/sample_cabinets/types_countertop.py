@@ -13,9 +13,9 @@ class Countertop(pc_types.Assembly):
 
         prompts_cabinet.add_countertop_prompts(self)
 
-        self.obj_x.location.x = pc_unit.inch(18) 
-        self.obj_y.location.y = -pc_unit.inch(22) 
-        self.obj_z.location.z = pc_unit.inch(1.5) 
+        self.obj_x.location.x = pc_unit.millimeter(470) 
+        self.obj_y.location.y = -pc_unit.millimeter(600) 
+        self.obj_z.location.z = pc_unit.millimeter(38) 
 
         width = self.obj_x.pyclone.get_var('location.x','width')
         depth = self.obj_y.pyclone.get_var('location.y','depth')

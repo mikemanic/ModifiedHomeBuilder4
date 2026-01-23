@@ -111,7 +111,11 @@ class Design_Carcass(pc_types.Assembly):
             tkh = self.get_prompt("Toe Kick Height").get_var('tkh') 
             tk_setback = self.get_prompt("Toe Kick Setback").get_var('tk_setback') 
 
-            carcass = assemblies_cabinet.add_design_carcass(self,self.exposed_interior)
+            # Use a dedicated base carcass part when the carcass type is Base.
+            if carcass_type.get_value() == "Base":
+                carcass = assemblies_cabinet.add_base_design_carcass(self,self.exposed_interior)
+            else:
+                carcass = assemblies_cabinet.add_design_carcass(self,self.exposed_interior)
             carcass.set_name("Design Carcass")
             carcass.dim_x('width',[width])
             carcass.dim_y('depth',[depth])
@@ -162,7 +166,7 @@ class Design_Blind_Carcass(pc_types.Assembly):
         insert = self.add_assembly(insert)
         insert.loc_x('IF(blind_panel_location==0,material_thickness+blind_panel_width+blind_panel_reveal,material_thickness)',
                      [blind_panel_location,width,blind_panel_width,blind_panel_reveal,material_thickness])
-        insert.loc_y('depth',[depth])
+        insert.loc_y('depth',[depth,material_thickness])
         if carcass_type.get_value() == "Upper": #UPPER CABINET
             insert.loc_z('material_thickness',[material_thickness])
             insert.dim_z('height-(material_thickness*2)',[height,material_thickness])
@@ -274,6 +278,7 @@ class Design_Blind_Carcass(pc_types.Assembly):
         is_exposed_interior.set_value(self.exposed_interior)
         
         if carcass_type.get_value() == "Upper":
+            # Upper cabinets use the standard design carcass
             self.design_carcass = assemblies_cabinet.add_design_carcass(self,self.exposed_interior)
             self.design_carcass.set_name("Design Carcass")
             self.design_carcass.dim_x('width',[width])
@@ -285,7 +290,12 @@ class Design_Blind_Carcass(pc_types.Assembly):
             tkh = self.get_prompt("Toe Kick Height").get_var('tkh') 
             tk_setback = self.get_prompt("Toe Kick Setback").get_var('tk_setback') 
 
-            self.design_carcass = assemblies_cabinet.add_design_carcass(self,self.exposed_interior)
+            # For base carcass type, load the Base Carcass part; otherwise use default
+            if carcass_type.get_value() == "Base":
+                self.design_carcass = assemblies_cabinet.add_base_design_carcass(self,self.exposed_interior)
+            else:
+                self.design_carcass = assemblies_cabinet.add_design_carcass(self,self.exposed_interior)
+
             self.design_carcass.set_name("Design Carcass")
             self.design_carcass.dim_x('width',[width])
             self.design_carcass.dim_y('depth',[depth])
