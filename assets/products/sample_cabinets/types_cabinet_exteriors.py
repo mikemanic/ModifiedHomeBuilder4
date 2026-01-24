@@ -194,6 +194,7 @@ class Drawers(types_fronts.Fronts):
         drawer_front = assemblies_cabinet.add_door_assembly(self)
         drawer_front.add_prompt("Pull Length",'DISTANCE',0)      
         self.add_drawer_pull(drawer_front)
+        self.add_drawer_box(drawer_front)
         drawer_front.add_prompt("Top Overlay",'DISTANCE',0)
         drawer_front.add_prompt("Bottom Overlay",'DISTANCE',0)
         drawer_front.add_prompt("Left Overlay",'DISTANCE',0)
@@ -426,7 +427,7 @@ class Door_Drawer(types_fronts.Fronts):
         self.add_drawer_pull(l_drawer_front)
         left_o.set_formula('lo_var',[lo_var])
         right_o.set_formula('IF(add_two_drawer_fronts_var,0,ro_var)',[add_two_drawer_fronts_var,ro_var])
-        # self.add_drawer_box(l_drawer_front)
+        self.add_drawer_box(l_drawer_front)
 
         r_drawer_front = assemblies_cabinet.add_door_assembly(self)
         top_o = r_drawer_front.add_prompt("Top Overlay",'DISTANCE',0)
@@ -448,7 +449,7 @@ class Door_Drawer(types_fronts.Fronts):
         self.add_drawer_pull(r_drawer_front)
         left_o.set_formula('0',[])
         right_o.set_formula('ro_var',[ro_var])        
-        # self.add_drawer_box(r_drawer_front)
+        self.add_drawer_box(r_drawer_front)
 
         self.set_prompts()
 

@@ -4,6 +4,7 @@ from . import paths_cabinet
 from . import material_pointers_cabinet
 from . import prompts_cabinet
 from . import const_cabinets as const
+from . import assemblies_cabinet
 from pc_lib import pc_types, pc_unit, pc_utils
 
 class Fronts(pc_types.Assembly):
@@ -253,3 +254,28 @@ class Fronts(pc_types.Assembly):
         prompts_cabinet.add_front_prompts(self)
         prompts_cabinet.add_front_overlay_prompts(self)
         prompts_cabinet.add_thickness_prompts(self)
+
+    def add_drawer_box(self, front):
+        # Get variables from the drawer front
+        df_width = front.obj_y.pyclone.get_var('location.y', 'df_width')
+        df_height = front.obj_x.pyclone.get_var('location.x', 'df_height')
+        front_thickness = front.obj_z.pyclone.get_var('location.z', 'front_thickness')
+        
+        # Get variables from the cabinet (self)
+        cabinet_depth = self.obj_y.pyclone.get_var('location.y', 'cabinet_depth')
+        
+        # Add the drawer box assembly
+        drawer_box = assemblies_cabinet.add_drawer_box(front)
+        drawer_box.set_name("Drawer Box")
+        
+        # Position it behind the front
+        drawer_box.loc_x(value=0)
+        drawer_box.loc_y(value=0)
+        drawer_box.loc_z(value=0)
+        
+        # Set dimensions
+        drawer_box.dim_x('df_height',[df_height])
+        drawer_box.dim_y('df_width',[df_width])
+        drawer_box.dim_z('-cabinet_depth+front_thickness',[cabinet_depth,front_thickness])
+        
+        return drawer_box
