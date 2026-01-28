@@ -194,7 +194,6 @@ class Drawers(types_fronts.Fronts):
         drawer_front = assemblies_cabinet.add_door_assembly(self)
         drawer_front.add_prompt("Pull Length",'DISTANCE',0)      
         self.add_drawer_pull(drawer_front)
-        self.add_drawer_box(drawer_front)
         drawer_front.add_prompt("Top Overlay",'DISTANCE',0)
         drawer_front.add_prompt("Bottom Overlay",'DISTANCE',0)
         drawer_front.add_prompt("Left Overlay",'DISTANCE',0)
@@ -245,7 +244,36 @@ class Drawers(types_fronts.Fronts):
         # stretcher.dim_y(value = pc_unit.inch(6))
         # stretcher.dim_z('st',[st])
         # hide = stretcher.get_prompt('Hide')
-        # hide.set_formula('IF(dq>' + str(index) + ',False,True)',[dq])
+        # hide.set_formula('IF(dq>' + str(i) + ',False,True)',[dq])
+
+        # ==========================================
+        # --- NEW: CREATE AND POSITION DRAWER BOX ---
+        # ==========================================
+        
+        drawer_box = assemblies_cabinet.add_drawer_box(self)
+        drawer_box.set_name('Drawer Box ' + str(index))
+        
+        # Orientation to be Upright (Same as Cabinet)
+        drawer_box.rot_x(value = 0)
+        drawer_box.rot_y(value = 0)
+        drawer_box.rot_z(value = 0)
+        
+        # Dimensions
+        drawer_box.dim_x('(x+left_overlay-right_overlay)', [x, left_overlay, right_overlay])
+        drawer_box.dim_y('y-0.02', [y]) 
+        drawer_box.dim_z('drawer_front_height-0.05', [drawer_front_height])
+        
+        # Location
+        drawer_box.loc_x(value = 0)
+        drawer_box.loc_y(value = 0)
+        drawer_box.loc_z('drawer_z_loc', [drawer_z_loc])
+        
+        # Hide prompt if drawer is hidden - WITH SAFETY CHECK
+        box_hide = drawer_box.get_prompt('Hide')
+        if box_hide is not None:
+            box_hide.set_formula('IF(dq>' + str(index-1) + ',False,True)',[dq])
+        
+        # ==========================================
 
         return front_empty
 
@@ -380,6 +408,7 @@ class Door_Drawer(types_fronts.Fronts):
         open_door = self.get_prompt("Open Door").get_var('open_door')
         inset = self.get_prompt("Inset Front").get_var('inset')
         open_drawer = self.get_prompt("Open Drawer").get_var('open_drawer')
+        st = self.get_prompt("Material Thickness").get_var('st')
 
         to, bo, lo, ro = self.add_overlay_prompts()
 
@@ -427,7 +456,37 @@ class Door_Drawer(types_fronts.Fronts):
         self.add_drawer_pull(l_drawer_front)
         left_o.set_formula('lo_var',[lo_var])
         right_o.set_formula('IF(add_two_drawer_fronts_var,0,ro_var)',[add_two_drawer_fronts_var,ro_var])
-        self.add_drawer_box(l_drawer_front)
+        
+        # ==========================================
+        # --- NEW: LEFT DRAWER BOX (Split Logic) ---
+        # ==========================================
+        
+        l_box = assemblies_cabinet.add_drawer_box(self)
+        l_box.set_name('Drawer Box Left')
+        l_box.rot_x(value = 0)
+        l_box.rot_y(value = 0)
+        l_box.rot_z(value = 0)
+        
+        # Dimensions
+        # Width: If split, half width. If not, full width.
+        l_box.dim_x('IF(add_two_drawer_fronts_var,(((x+lo_var+ro_var)-vertical_gap)/2),(x+lo_var+ro_var))',[add_two_drawer_fronts_var,x,lo_var,ro_var,vertical_gap])
+        l_box.dim_y('y-0.02', [y])
+        l_box.dim_z('top_df_height_var-0.05', [top_df_height_var])
+        
+        # Positioning
+        # X: Center of Left side. (x/2) is center of cabinet.
+        # Left Center = (x/2) - (LeftBoxWidth/2) - (Gap/2)
+        l_box.loc_x('(x/2)-((IF(add_two_drawer_fronts_var,(((x+lo_var+ro_var)-vertical_gap)/2),(x+lo_var+ro_var)))/2)-((IF(add_two_drawer_fronts_var,vertical_gap,0))/2)',[x,add_two_drawer_fronts_var,lo_var,ro_var,vertical_gap])
+        l_box.loc_y(value = 0)
+        l_box.loc_z('z+0', [z, to_var, top_df_height_var])
+        
+        # Hide if not two drawers - WITH SAFETY CHECK
+        l_box_hide = l_box.get_prompt('Hide')
+        if l_box_hide is not None:
+            l_box_hide.set_formula('IF(add_two_drawer_fronts_var,False,True)',[add_two_drawer_fronts_var])
+        
+        # ==========================================
+
 
         r_drawer_front = assemblies_cabinet.add_door_assembly(self)
         top_o = r_drawer_front.add_prompt("Top Overlay",'DISTANCE',0)
@@ -449,7 +508,34 @@ class Door_Drawer(types_fronts.Fronts):
         self.add_drawer_pull(r_drawer_front)
         left_o.set_formula('0',[])
         right_o.set_formula('ro_var',[ro_var])        
-        self.add_drawer_box(r_drawer_front)
+        
+        # ==========================================
+        # --- NEW: RIGHT DRAWER BOX (Split Logic) ---
+        # ==========================================
+        
+        r_box = assemblies_cabinet.add_drawer_box(self)
+        r_box.set_name('Drawer Box Right')
+        r_box.rot_x(value = 0)
+        r_box.rot_y(value = 0)
+        r_box.rot_z(value = 0)
+        
+        # Dimensions
+        r_box.dim_x('(((x+lo_var+ro_var)-vertical_gap)/2)',[x,lo_var,ro_var,vertical_gap])
+        r_box.dim_y('y-0.02', [y])
+        r_box.dim_z('top_df_height_var-0.05', [top_df_height_var])
+        
+        # Positioning
+        # X: Center of Right side. (x/2) + (RightBoxWidth/2) + (Gap/2)
+        r_box.loc_x('(x/2)+(((((x+lo_var+ro_var)-vertical_gap)/2))/2)+((vertical_gap)/2)',[x,lo_var,ro_var,vertical_gap])
+        r_box.loc_y(value = 0)
+        r_box.loc_z('z+0', [z, to_var, top_df_height_var])
+        
+        # Hide if not two drawers - WITH SAFETY CHECK
+        r_box_hide = r_box.get_prompt('Hide')
+        if r_box_hide is not None:
+            r_box_hide.set_formula('IF(add_two_drawer_fronts_var,False,True)',[add_two_drawer_fronts_var])
+        
+        # ==========================================
 
         self.set_prompts()
 
