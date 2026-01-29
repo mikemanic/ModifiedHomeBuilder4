@@ -138,37 +138,37 @@ class HB_Cabinet_Scene_Props(PropertyGroup):
 
     column_width: FloatProperty(name="Column Width",
                                            description="Default width for cabinet columns",
-                                           default=pc_unit.inch(2),
+                                           default=pc_unit.millimeter(50),
                                            unit='LENGTH')
 
     width_1_door: FloatProperty(name="Width 1 Door",
                                            description="Default width for one door wide cabinets",
-                                           default=pc_unit.inch(18.0),
+                                           default=pc_unit.millimeter(450),
                                            unit='LENGTH')
     
     width_2_door: FloatProperty(name="Width 2 Door",
                                            description="Default width for two door wide and open cabinets",
-                                           default=pc_unit.inch(36.0),
+                                           default=pc_unit.millimeter(900),
                                            unit='LENGTH')
     
     width_drawer: FloatProperty(name="Width Drawer",
                                            description="Default width for drawer cabinets",
-                                           default=pc_unit.inch(18.0),
+                                           default=pc_unit.millimeter(550),
                                            unit='LENGTH')
     
     base_width_blind: FloatProperty(name="Base Width Blind",
                                                description="Default width for base blind corner cabinets",
-                                               default=pc_unit.inch(48.0),
+                                               default=pc_unit.millimeter(1050),
                                                unit='LENGTH')
     
     tall_width_blind: FloatProperty(name="Tall Width Blind",
                                                description="Default width for tall blind corner cabinets",
-                                               default=pc_unit.inch(48.0),
+                                               default=pc_unit.millimeter(1050),
                                                unit='LENGTH')
     
     blind_panel_reveal: FloatProperty(name="Blind Panel Reveal",
                                                  description="Default reveal for blind panels",
-                                                 default=pc_unit.inch(3.0),
+                                                 default=pc_unit.millimeter(20),
                                                  unit='LENGTH')
     
     inset_blind_panel: BoolProperty(name="Inset Blind Panel",
@@ -177,7 +177,7 @@ class HB_Cabinet_Scene_Props(PropertyGroup):
     
     upper_width_blind: FloatProperty(name="Upper Width Blind",
                                                 description="Default width for upper blind corner cabinets",
-                                                default=pc_unit.inch(36.0),
+                                                default=pc_unit.millimeter(800),
                                                 unit='LENGTH')
 
     stacked_top_cabinet_height: FloatProperty(name="Stacked Top Cabinet Height",
@@ -188,17 +188,17 @@ class HB_Cabinet_Scene_Props(PropertyGroup):
     #CABINET HANDLES
     height_above_floor: FloatProperty(name="Height Above Floor",
                                                  description="Default height above floor for upper cabinets",
-                                                 default=pc_unit.inch(84.0),
+                                                 default=pc_unit.millimeter(1550),
                                                  unit='LENGTH')
     
     pull_dim_from_edge: FloatProperty(name="Pull Distance From Edge",
                                                  description="Distance from Edge of Door to center of pull",
-                                                 default=pc_unit.inch(2.0),
+                                                 default=pc_unit.millimeter(40),
                                                  unit='LENGTH')
 
     pull_vertical_location_base: FloatProperty(name="Pull Vertical Location Base",
                                                  description="Distance from Top of Base Door to Top of Pull",
-                                                 default=pc_unit.inch(1.5),
+                                                 default=pc_unit.millimeter(40),
                                                  unit='LENGTH')
 
     pull_vertical_location_tall: FloatProperty(name="Pull Vertical Location Base",

@@ -170,10 +170,6 @@ class Hanging_Rod(Closet_Insert):
         self.obj_bp["PROMPT_ID"] = "hb_sample_cabinets.hanging_rod_prompts"
         self.obj_bp["MENU_ID"] = "HOME_BUILDER_MT_cabinet_insert_commands"
 
-        # self.obj_x.location.x = pc_unit.inch(20)
-        # self.obj_y.location.y = pc_unit.inch(12)
-        # self.obj_z.location.z = pc_unit.inch(60)
-
         self.obj_x.location.x = pc_unit.millimeter(500)
         self.obj_y.location.y = pc_unit.millimeter(300)
         self.obj_z.location.z = pc_unit.millimeter(1500)
