@@ -5,6 +5,7 @@ from . import utils_cabinet
 def add_cabinet_prompts(assembly):
     assembly.add_prompt("Cabinet Type",'TEXT',"")
     assembly.add_prompt("Corner Type",'TEXT',"")
+    assembly.add_prompt("Open Drawer", 'PERCENTAGE', 0)
 
 def add_stacked_cabinet_prompts(assembly):
     assembly.add_prompt("Bottom Cabinet Height",'DISTANCE',pc_unit.millimeter(1250))

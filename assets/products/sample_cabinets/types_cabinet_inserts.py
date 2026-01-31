@@ -352,7 +352,7 @@ class Cubbies(Closet_Insert):
         self.add_prompt("Divider Thickness",'DISTANCE',pc_unit.millimeter(18)) 
         self.add_prompt("Horizontal Quantity",'QUANTITY',2) 
         self.add_prompt("Vertical Quantity",'QUANTITY',2) 
-        self.add_prompt("Cubby Setback",'DISTANCE',pc_unit.inch(.125)) 
+        self.add_prompt("Cubby Setback",'DISTANCE',pc_unit.millimeter(10)) 
         self.add_prompt("Cubby Height",'DISTANCE',pc_unit.millimeter(600)) 
         
         width = self.obj_x.pyclone.get_var('location.x','width')

@@ -25,6 +25,7 @@ class Cabinet_Exterior(pc_types.Assembly):
 
     def draw_prompts(self,layout,context):
         open_door = self.get_prompt("Open Door")
+        open_drawer = self.get_prompt("Open Drawer")
         drawer_qty = self.get_prompt("Drawer Quantity")
         front_height_calculator = self.get_calculator("Front Height Calculator")
         door_swing = self.get_prompt("Door Swing")
@@ -35,12 +36,13 @@ class Cabinet_Exterior(pc_types.Assembly):
         center_pulls_on_front = self.get_prompt("Center Pull On Front")
         drawer_pull_vertical_location = self.get_prompt("Drawer Pull Vertical Location")
         inset = self.get_prompt("Inset Front")
+    
 
         if open_door:
             open_door.draw(layout,allow_edit=False)
 
         if door_swing:
-            door_swing.draw(layout,allow_edit=False)    
+            door_swing.draw(layout,allow_edit=False)
 
         if drawer_qty:
             drawer_qty.draw(layout,allow_edit=False)
@@ -87,6 +89,12 @@ class Cabinet_Exterior(pc_types.Assembly):
             row = layout.row()
             row.label(text="Top Drawer Front Height")
             row.prop(top_drawer_front_height,'distance_value',text="")
+
+        if open_drawer:
+            box = layout.box()
+            row = box.row()
+            row.label(text="Open Drawers")
+            row.prop(open_drawer, 'percentage_value', text="Open")    
 
         if front_height_calculator:
             for i in range(1,9):
@@ -185,7 +193,6 @@ class Drawers(types_fronts.Fronts):
             front_empty.pyclone.loc_z('z-drawer_front_height+top_overlay',[z,drawer_front_height,top_overlay])        
         
         drawer_z_loc = front_empty.pyclone.get_var('location.z',"drawer_z_loc")
-
         drawer_front = assemblies_cabinet.add_door_assembly(self)
         drawer_front.add_prompt("Pull Length",'DISTANCE',0)      
         self.add_drawer_pull(drawer_front)
@@ -212,6 +219,7 @@ class Drawers(types_fronts.Fronts):
         left_o.set_formula('left_overlay',[left_overlay])
         right_o.set_formula('right_overlay',[right_overlay])
         hide = drawer_front.get_prompt('Hide')
+        # --- DQ is Drawer Quantity ---
         hide.set_formula('IF(dq>' + str(index-1) + ',False,True)',[dq])        
         drawer_front.add_prompt("Drawer Override",'CHECKBOX',False)
         drawer_front.add_prompt("Drawer Type",'TEXT',"")
@@ -225,7 +233,7 @@ class Drawers(types_fronts.Fronts):
         # ==========================================
         
         drawer_box = assemblies_cabinet.add_drawer_box(self)
-        drawer_box.set_name('Drawer Box ' + str(index))
+        drawer_box.set_name('DrawerBox' + str(index))
         
         # Orientation to be Upright (Same as Cabinet)
         drawer_box.rot_x(value = 0)
@@ -239,7 +247,7 @@ class Drawers(types_fronts.Fronts):
         
         # Location
         drawer_box.loc_x(value = 0)
-        drawer_box.loc_y('0-(y*(open_drawer/100))', [y, front_thickness, open_drawer])
+        drawer_box.loc_y('-(y*(open_drawer/100))', [y, front_thickness, open_drawer])
         
         # Clamp Z so box never goes below cabinet bottom
         drawer_box.loc_z('IF(drawer_z_loc<0,0,drawer_z_loc)', [drawer_z_loc])
@@ -331,7 +339,6 @@ class Door_Drawer(types_fronts.Fronts):
 
     def draw(self):
         props = utils_cabinet.get_scene_props(bpy.context.scene)
-
         self.create_assembly("Door Drawer")
         self.obj_bp[const.DOOR_DRAWER_INSERT_TAG] = True
         self.obj_bp["IS_EXTERIOR_BP"] = True
@@ -369,7 +376,7 @@ class Door_Drawer(types_fronts.Fronts):
         
         #VARS
         x = self.obj_x.pyclone.get_var('location.x','x')
-        y = self.obj_z.pyclone.get_var('location.y','y')  
+        y = self.obj_y.pyclone.get_var('location.y','y')  
         z = self.obj_z.pyclone.get_var('location.z','z')        
         vertical_gap = self.get_prompt("Vertical Gap").get_var('vertical_gap')
         h_gap = self.get_prompt("Horizontal Gap").get_var('h_gap')
@@ -377,9 +384,13 @@ class Door_Drawer(types_fronts.Fronts):
         door_to_cabinet_gap = self.get_prompt("Door to Cabinet Gap").get_var('door_to_cabinet_gap')
         front_thickness = self.get_prompt("Front Thickness").get_var('front_thickness')
         door_rotation = self.get_prompt("Door Rotation").get_var('door_rotation')
-        open_door = self.get_prompt("Open Door").get_var('open_door')
+        
+        # ==========================================
+        # FIX: Unique variable names to prevent conflict
+        # ==========================================
+        door_open_val = self.get_prompt("Open Door").get_var('door_open_val')
+        drawer_open_val = self.get_prompt("Open Drawer").get_var('drawer_open_val')
         inset = self.get_prompt("Inset Front").get_var('inset')
-        open_drawer = self.get_prompt("Open Drawer").get_var('open_drawer')
         st = self.get_prompt("Material Thickness").get_var('st')
 
         to, bo, lo, ro = self.add_overlay_prompts()
@@ -418,7 +429,8 @@ class Door_Drawer(types_fronts.Fronts):
         l_drawer_front.obj_bp[const.DRAWER_FRONT_TAG] = True
         l_drawer_front.set_name('Drawer Front')
         l_drawer_front.loc_x('-lo_var',[lo_var])
-        l_drawer_front.loc_y('IF(inset,front_thickness,-door_to_cabinet_gap)-(y*open_drawer)',[inset,front_thickness,door_to_cabinet_gap,y,open_drawer])
+        # FIX: Use unique drawer_open_val
+        l_drawer_front.loc_y('IF(inset,front_thickness,-door_to_cabinet_gap)-(y*drawer_open_val/100)',[inset,front_thickness,door_to_cabinet_gap,y,drawer_open_val])
         l_drawer_front.loc_z('z+to_var-top_df_height_var',[z,to_var,top_df_height_var])
         l_drawer_front.rot_x(value = math.radians(90))
         l_drawer_front.rot_y(value = math.radians(-90))
@@ -430,7 +442,7 @@ class Door_Drawer(types_fronts.Fronts):
         right_o.set_formula('IF(add_two_drawer_fronts_var,0,ro_var)',[add_two_drawer_fronts_var,ro_var])
         
         # ==========================================
-        # --- NEW: LEFT DRAWER BOX (Split Logic) ---
+        # --- FIXED: LEFT DRAWER BOX ---
         # ==========================================
         
         l_box = assemblies_cabinet.add_drawer_box(self)
@@ -440,21 +452,19 @@ class Door_Drawer(types_fronts.Fronts):
         l_box.rot_z(value = 0)
         
         # Dimensions
-        # Width: If split, half width. If not, full width.
-        l_box.dim_x('x/2-front_thickness/2',[add_two_drawer_fronts_var,x,lo_var,ro_var,vertical_gap, front_thickness])
-        l_box.dim_y('y+depth', [y, assemblies_cabinet.depth])
+        l_box.dim_x('IF(add_two_drawer_fronts_var,(x-vertical_gap)/2,x)',[add_two_drawer_fronts_var,x,vertical_gap])
+        l_box.dim_y('y-front_thickness',[y, front_thickness])
         l_box.dim_z('top_df_height_var-0.05', [top_df_height_var])
         
         # Positioning
-        # X: Center of Left side. (x/2) is center of cabinet.
         l_box.loc_x(value = 0)
-        l_box.loc_y(value = 0)
+        # FIX: Use unique drawer_open_val
+        l_box.loc_y('0-(y*(drawer_open_val/100))',[y, drawer_open_val])
         l_box.loc_z('z+front_thickness-0.003-top_df_height_var', [z, to_var, top_df_height_var, front_thickness])
         
-        # Hide if not two drawers - WITH SAFETY CHECK
         l_box_hide = l_box.get_prompt('Hide')
         if l_box_hide is not None:
-            l_box_hide.set_formula('IF(add_two_drawer_fronts_var,False,True)',[add_two_drawer_fronts_var])
+            l_box_hide.set_formula('False',[])
         
         # ==========================================
 
@@ -467,7 +477,8 @@ class Door_Drawer(types_fronts.Fronts):
         r_drawer_front.obj_bp[const.DRAWER_FRONT_TAG] = True
         r_drawer_front.set_name('Drawer Front')
         r_drawer_front.loc_x('(x/2)+(vertical_gap/2)',[x,vertical_gap])
-        r_drawer_front.loc_y('IF(inset,front_thickness,-door_to_cabinet_gap)-(y*open_drawer)',[inset,front_thickness,door_to_cabinet_gap,y,open_drawer])
+        # FIX: Use unique drawer_open_val
+        r_drawer_front.loc_y('IF(inset,front_thickness,-door_to_cabinet_gap)-(y*drawer_open_val/100)',[inset,front_thickness,door_to_cabinet_gap,y,drawer_open_val])
         r_drawer_front.loc_z('z+to_var-top_df_height_var',[z,to_var,top_df_height_var])
         r_drawer_front.rot_x(value = math.radians(90))
         r_drawer_front.rot_y(value = math.radians(-90))
@@ -481,7 +492,7 @@ class Door_Drawer(types_fronts.Fronts):
         right_o.set_formula('ro_var',[ro_var])        
         
         # ==========================================
-        # --- NEW: RIGHT DRAWER BOX (Split Logic) ---
+        # --- FIXED: RIGHT DRAWER BOX ---
         # ==========================================
         
         r_box = assemblies_cabinet.add_drawer_box(self)
@@ -491,17 +502,16 @@ class Door_Drawer(types_fronts.Fronts):
         r_box.rot_z(value = 0)
         
         # Dimensions
-        r_box.dim_x('x/2-front_thickness/2',[x,lo_var,ro_var,vertical_gap, front_thickness, add_two_drawer_fronts_var])
-        r_box.dim_y('0.45', [y])
+        r_box.dim_x('(x-vertical_gap)/2',[x, vertical_gap])
+        r_box.dim_y('y-front_thickness',[y, front_thickness])
         r_box.dim_z('top_df_height_var-0.05', [top_df_height_var])
         
         # Positioning
-        # X: Center of Right side. (x/2) + (RightBoxWidth/2) + (Gap/2)
-        r_box.loc_x('x/2+front_thickness/2',[x,lo_var,ro_var,vertical_gap, front_thickness, add_two_drawer_fronts_var])
-        r_box.loc_y(value = 0)
+        r_box.loc_x('x/2+vertical_gap/2',[x, vertical_gap])
+        # FIX: Use unique drawer_open_val
+        r_box.loc_y('0-(y*(drawer_open_val/100))',[y, drawer_open_val])
         r_box.loc_z('z+front_thickness-0.003-top_df_height_var', [z, to_var, top_df_height_var, front_thickness])
         
-        # Hide if not two drawers - WITH SAFETY CHECK
         r_box_hide = r_box.get_prompt('Hide')
         if r_box_hide is not None:
             r_box_hide.set_formula('IF(add_two_drawer_fronts_var,False,True)',[add_two_drawer_fronts_var])
@@ -509,8 +519,6 @@ class Door_Drawer(types_fronts.Fronts):
         # ==========================================
 
         self.set_prompts()
-
-
 class Opening(Cabinet_Exterior):
 
     def draw(self):        
@@ -532,4 +540,4 @@ class Opening(Cabinet_Exterior):
         opening.rot_z(value = 0)
         opening.dim_x('x',[x])
         opening.dim_y('y',[y])
-        opening.dim_z('z',[z])  
+        opening.dim_z('z',[z])
