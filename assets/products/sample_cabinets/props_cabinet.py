@@ -73,7 +73,7 @@ class HB_Cabinet_Scene_Props(PropertyGroup):
     
     base_cabinet_height: FloatProperty(name="Base Cabinet Height",
                                                   description="Default height for base cabinets",
-                                                  default=pc_unit.millimeter(862),
+                                                  default=pc_unit.millimeter(900),
                                                   unit='LENGTH')
     
     base_inside_corner_size: FloatProperty(name="Base Inside Corner Size",
@@ -93,7 +93,7 @@ class HB_Cabinet_Scene_Props(PropertyGroup):
 
     tall_cabinet_depth: FloatProperty(name="Tall Cabinet Depth",
                                                  description="Default depth for tall cabinets",
-                                                 default=pc_unit.millimeter(1020),
+                                                 default=pc_unit.millimeter(570),
                                                  unit='LENGTH')
     
     tall_cabinet_height: FloatProperty(name="Tall Cabinet Height",
@@ -118,22 +118,22 @@ class HB_Cabinet_Scene_Props(PropertyGroup):
     
     sink_cabinet_depth: FloatProperty(name="Upper Cabinet Depth",
                                                  description="Default depth for sink cabinets",
-                                                 default=pc_unit.inch(23.0),
+                                                 default=pc_unit.millimeter(320),
                                                  unit='LENGTH')
     
     sink_cabinet_height: FloatProperty(name="Upper Cabinet Height",
                                                   description="Default height for sink cabinets",
-                                                  default=pc_unit.inch(34.0),
+                                                  default=pc_unit.millimeter(900),
                                                   unit='LENGTH')
 
     suspended_cabinet_depth: FloatProperty(name="Upper Cabinet Depth",
                                                       description="Default depth for suspended cabinets",
-                                                      default=pc_unit.inch(23.0),
+                                                      default=pc_unit.millimeter(320),
                                                       unit='LENGTH')
     
     suspended_cabinet_height: FloatProperty(name="Upper Cabinet Height",
                                                        description="Default height for suspended cabinets",
-                                                       default=pc_unit.inch(6.0),
+                                                       default=pc_unit.millimeter(900),
                                                        unit='LENGTH')
 
     column_width: FloatProperty(name="Column Width",
@@ -173,7 +173,7 @@ class HB_Cabinet_Scene_Props(PropertyGroup):
     
     inset_blind_panel: BoolProperty(name="Inset Blind Panel",
                                                description="Check this to inset the blind panel into the cabinet carcass",
-                                               default=True)
+                                               default=False)
     
     upper_width_blind: FloatProperty(name="Upper Width Blind",
                                                 description="Default width for upper blind corner cabinets",
@@ -182,7 +182,7 @@ class HB_Cabinet_Scene_Props(PropertyGroup):
 
     stacked_top_cabinet_height: FloatProperty(name="Stacked Top Cabinet Height",
                                                 description="Default Height for the Top Cabinet on Stacked Cabinets",
-                                                default=pc_unit.inch(12.0),
+                                                default=pc_unit.millimeter(320),
                                                 unit='LENGTH')
 
     #CABINET HANDLES
@@ -330,40 +330,40 @@ class HB_Cabinet_Scene_Props(PropertyGroup):
 
     base_closet_panel_height: bpy.props.EnumProperty(name="Base Closet Panel Height",
                                                      items=const.PANEL_HEIGHTS,
-                                                     default = '819')
+                                                     default = '862')
 
     default_base_closet_depth: bpy.props.FloatProperty(name="Default Base Closet Depth",
                                                  description="Default depth for base closets",
-                                                 default=pc_unit.inch(14.0),
+                                                 default=pc_unit.millimeter(450),
                                                  unit='LENGTH')
 
     opening_height_to_fill_doors: bpy.props.FloatProperty(name="Opening Height to Fill Doors",
                                                  description="The maximum opening height to automatically fill opening when placing closet doors.",
-                                                 default=pc_unit.inch(35.0),
+                                                 default=pc_unit.millimeter(744),
                                                  unit='LENGTH')
 
     default_hanging_closet_depth: bpy.props.FloatProperty(name="Default hanging Closet Depth",
                                                  description="Default depth for Hanging closets",
-                                                 default=pc_unit.inch(14.0),
+                                                 default=pc_unit.millimeter(450),
                                                  unit='LENGTH')
 
     default_tall_closet_depth: bpy.props.FloatProperty(name="Default Tall Closet Depth",
                                                  description="Default depth for tall closets",
-                                                 default=pc_unit.inch(14.0),
+                                                 default=pc_unit.millimeter(450),
                                                  unit='LENGTH')
 
     closet_corner_spacing: bpy.props.FloatProperty(name="Closet Corner Spacing",
                                                  description="Offset for closets when meeting in corner",
-                                                 default=pc_unit.inch(12.0),
+                                                 default=pc_unit.millimeter(450),
                                                  unit='LENGTH')
 
     show_closet_panel_drilling: bpy.props.BoolProperty(name="Show Panel Drilling",
                                                        description="Check this option if you want drilling to show on the closet panels",
-                                                       default=False)      
+                                                       default=True)      
 
     adj_shelf_setback: bpy.props.FloatProperty(name="Adjustable Shelf Setback",
                                                  description="Default setback for adjustable shelves",
-                                                 default=0,
+                                                 default=pc_unit.millimeter(10),
                                                  unit='LENGTH')
 
     fixed_shelf_setback: bpy.props.FloatProperty(name="Fixed Shelf Setback",

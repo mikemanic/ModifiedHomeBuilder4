@@ -20,7 +20,6 @@ def add_design_carcass(assembly,exposed_interior=False):
     material_pointers_cabinet.assign_materials_to_assembly(part)
     return part
 
-
 def add_base_design_carcass(assembly,exposed_interior=False):
     part_path = path.join(paths_cabinet.get_assembly_path(),"Base Carcass.blend")
     part = assembly.add_assembly_from_file(part_path)
@@ -308,6 +307,21 @@ def add_closet_oval_hanging_rod(assembly):
     part.obj_prompts.empty_display_size = .001    
     pc_utils.add_bevel(part)
     material_pointers_cabinet.assign_hanging_rods_pointers(part)
+    material_pointers_cabinet.assign_materials_to_assembly(part)
+    return part        
+
+def add_closet_lift_rod(assembly):
+    part_path = path.join(paths_cabinet.get_assembly_path(),"Lift Rod.blend")
+    part = assembly.add_assembly_from_file(part_path)
+    part.obj_bp['IS_LIFT_ROD_BP'] = True
+    assembly.add_assembly(part)
+    part.obj_bp.empty_display_size = .001
+    part.obj_x.empty_display_size = .001
+    part.obj_y.empty_display_size = .001
+    part.obj_z.empty_display_size = .001
+    part.obj_prompts.empty_display_size = .001    
+    pc_utils.add_bevel(part)
+    material_pointers_cabinet.assign_lift_rods_pointers(part)
     material_pointers_cabinet.assign_materials_to_assembly(part)
     return part        
 

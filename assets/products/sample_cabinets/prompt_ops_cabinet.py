@@ -48,173 +48,28 @@ def update_closet_height(self,context):
     self.opening_7_height = self.set_height
     self.opening_8_height = self.set_height
     
-    # allow temporary suppression of the handlers when initializing values
-    if getattr(self, 'suspend_updates', False):
-        return
-
     obj_product_bp = pc_utils.get_bp_by_tag(context.active_object,const.CLOSET_TAG)
     product = pc_types.Assembly(obj_product_bp)
-    # compute base opening height (in meters)
-    base_height_m = pc_unit.millimeter(float(self.set_height))
-    # determine blat thickness (in meters) from product prompt or scene props
-    ctop_thickness_m = 0.0
-    try:
-        ctop_prompt = product.get_prompt("Blat Thickness")
-        if ctop_prompt:
-            # prompt distance_value uses meters
-            ctop_thickness_m = getattr(ctop_prompt, 'distance_value', 0.0)
-        else:
-            # fallback to scene property
-            ctop_thickness_m = utils_cabinet.get_scene_props(context.scene).countertop_thickness
-    except Exception:
-        try:
-            ctop_thickness_m = utils_cabinet.get_scene_props(context.scene).countertop_thickness
-        except Exception:
-            ctop_thickness_m = 0.0
-
     if self.is_base:
-        # Interpret the selected Set Height as the overall assembly height
-    # (including blat). The closet partition (product.obj_z) is the
-    # total minus blat thickness so the blat can be placed at that
-    # partition top and extend upwards by its thickness.
-        total_height_m = pc_unit.millimeter(float(self.set_height))
-        partition_height = total_height_m - float(ctop_thickness_m)
-        # enforce a sensible minimum partition height
-        if partition_height < 0.25:
-            partition_height = 0.25
-        product.obj_z.location.z = partition_height
-        # Ensure the product's Blat Thickness prompt is updated to the
-        # current scene countertop thickness so edits to the float also apply
-        # the blat thickness consistently.
-        try:
-            ctop_prompt = product.get_prompt("Blat Thickness")
-            if ctop_prompt:
-                # distance_value is in meters
-                ctop_prompt.distance_value = float(ctop_thickness_m)
-        except Exception:
-            pass
-        # keep editable float in sync when user picks a preset enum
-        try:
-            # convert preset (assumed mm value string) to meters
-            self.suspend_updates = True
-            self.set_height_float = pc_unit.millimeter(float(self.set_height))
-            self.suspend_updates = False
-        except Exception:
-            self.suspend_updates = False
-            pass
+        product.obj_z.location.z = pc_unit.millimeter(float(self.set_height))
 
     for i in range(1,10):
         opening_height = product.get_prompt("Opening " + str(i) + " Height")
         if opening_height:
-            # Opening prompt expects meters and should be total minus blat
-            # Opening height is the partition height (total minus countertop)
-            try:
-                total_m = float(self.set_height_float)
-            except Exception:
-                total_m = pc_unit.millimeter(float(self.set_height))
-            opening_val = total_m - float(ctop_thickness_m)
-            if opening_val < 0.25:
-                opening_val = 0.25
-            opening_height.set_value(opening_val)
+            opening_height.set_value(pc_unit.millimeter(float(self.set_height)))
 
 def update_closet_depth(self,context):
     ''' EVENT changes depth for all closet openings
     '''
-    # allow temporary suppression of the handlers when initializing values
-    if getattr(self, 'suspend_updates', False):
-        return
-
     obj_product_bp = pc_utils.get_bp_by_tag(context.active_object,const.CLOSET_TAG)
     product = pc_types.Assembly(obj_product_bp)
     if self.is_base:
-        # Determine countertop overhang front (meters) if present
-        try:
-            ctop_oh_prompt = product.get_prompt("Countertop Overhang Front")
-            if ctop_oh_prompt:
-                ctop_oh = float(getattr(ctop_oh_prompt, 'distance_value', 0.0))
-            else:
-                ctop_oh = 0.0
-        except Exception:
-            ctop_oh = 0.0
-
-        # Set product depth (obj_y uses negative Y for depth)
-        try:
-            product.obj_y.location.y = -abs(float(self.set_depth))
-        except Exception:
-            pass
-
-        # Compute opening depth = total depth - countertop overhang front
-        opening_depth_val = float(self.set_depth) - float(ctop_oh)
-        if opening_depth_val < 0.05:
-            opening_depth_val = 0.05
-
-        # Update each Opening N Depth prompt to reflect the partition depth
-        for i in range(1,10):
-            opening_depth = product.get_prompt("Opening " + str(i) + " Depth")
-            if opening_depth:
-                try:
-                    opening_depth.distance_value = opening_depth_val
-                except Exception:
-                    try:
-                        opening_depth.set_value(opening_depth_val)
-                    except Exception:
-                        pass
-
-
-def update_closet_height_float(self,context):
-    ''' EVENT changes height for all closet openings using a float (meters)
-        This is used when the UI exposes an editable float height instead of
-        the preset enum. It updates product height and each Opening N Height prompt.
-    '''
-    # allow temporary suppression of the handlers when initializing values
-    if getattr(self, 'suspend_updates', False):
-        return
-
-    obj_product_bp = pc_utils.get_bp_by_tag(context.active_object,const.CLOSET_TAG)
-    product = pc_types.Assembly(obj_product_bp)
-    # product.obj_z.location.z and opening height prompts expect meters
-    # determine blat thickness (in meters) from product prompt or scene props
-    ctop_thickness_m = 0.0
-    try:
-        ctop_prompt = product.get_prompt("Blat Thickness")
-        if ctop_prompt:
-            ctop_thickness_m = getattr(ctop_prompt, 'distance_value', 0.0)
-        else:
-            ctop_thickness_m = utils_cabinet.get_scene_props(context.scene).countertop_thickness
-    except Exception:
-        try:
-            ctop_thickness_m = utils_cabinet.get_scene_props(context.scene).countertop_thickness
-        except Exception:
-            ctop_thickness_m = 0.0
-
-    if self.is_base:
-    # Treat the numeric Set Height as the overall total height (partition + blat).
-    # The closet partition (product.obj_z) should be total minus blat
-    # so the blat can be placed at that partition top and extend
-    # upwards by its thickness.
-        try:
-            total_height = float(self.set_height_float)
-        except Exception:
-            total_height = 0.0
-        partition_height = total_height - float(ctop_thickness_m)
-        if partition_height < 0.25:
-            partition_height = 0.25
-        product.obj_z.location.z = partition_height
-        # write the scene blat thickness into the product's prompt so
-        # blat thickness edits are applied together with height edits
-        try:
-            ctop_prompt = product.get_prompt("Blat Thickness")
-            if ctop_prompt:
-                ctop_prompt.distance_value = float(ctop_thickness_m)
-        except Exception:
-            pass
+        product.obj_y.location.y = -self.set_depth
 
     for i in range(1,10):
-        opening_height = product.get_prompt("Opening " + str(i) + " Height")
-        if opening_height:
-            # Opening prompt expects meters: set to partition height (total - countertop)
-            opening_val = partition_height
-            opening_height.set_value(opening_val)
+        opening_depth = product.get_prompt("Opening " + str(i) + " Depth")
+        if opening_depth:
+            opening_depth.set_value(self.set_depth)
 
 def update_corner_closet_height(self,context):
     ''' EVENT changes height for corner closet
@@ -814,9 +669,9 @@ class hb_sample_cabinets_OT_cabinet_prompts(bpy.types.Operator):
             blind_panel_location = carcass.get_prompt("Blind Panel Location")
             blind_panel_width = carcass.get_prompt("Blind Panel Width")
             blind_panel_reveal = carcass.get_prompt("Blind Panel Reveal")
-            add_bottom_light = carcass.get_prompt("Add Bottom Light")
-            add_top_light = carcass.get_prompt("Add Top Light")
-            add_side_light = carcass.get_prompt("Add Side Light")
+            # add_bottom_light = carcass.get_prompt("Add Bottom Light")
+            # add_top_light = carcass.get_prompt("Add Top Light")
+            # add_side_light = carcass.get_prompt("Add Side Light")
   
             col = layout.column(align=True)
             box = col.box()
@@ -848,12 +703,12 @@ class hb_sample_cabinets_OT_cabinet_prompts(bpy.types.Operator):
                 row.prop(finished_bottom,'checkbox_value',text="Bottom")
                 row.prop(finished_back,'checkbox_value',text="Back")
 
-            if add_bottom_light and add_top_light and add_side_light:
-                 row = box.row()
-                 row.label(text="Cabinet Lighting:")   
-                 row.prop(add_bottom_light,'checkbox_value',text="Bottom")
-                 row.prop(add_top_light,'checkbox_value',text="Top")
-                 row.prop(add_side_light,'checkbox_value',text="Side")  
+            # if add_bottom_light and add_top_light and add_side_light:
+            #     row = box.row()
+            #     row.label(text="Cabinet Lighting:")   
+            #     row.prop(add_bottom_light,'checkbox_value',text="Bottom")
+            #     row.prop(add_top_light,'checkbox_value',text="Top")
+            #     row.prop(add_side_light,'checkbox_value',text="Side")  
 
     def draw_cabinet_prompts(self,layout,context):
         bottom_cabinet_height = self.cabinet.get_prompt("Bottom Cabinet Height")    
@@ -1499,12 +1354,7 @@ class hb_sample_cabinets_OT_opening_cabinet_prompts(bpy.types.Operator):
                                        default = '2131',
                                        update = update_closet_height)
 
-    # Keep the preset enum for users who prefer selecting from common panel heights.
-    # Also expose an editable float `set_height_float` so base closets can set an
-    # explicit numeric height (in meters) and have the product update immediately.
     set_depth: bpy.props.FloatProperty(name="Set Depth",unit='LENGTH',precision=4,update=update_closet_depth)
-
-    set_height_float: bpy.props.FloatProperty(name="Set Height Value",unit='LENGTH',precision=4,update=update_closet_height_float)
 
     opening_1_height: bpy.props.EnumProperty(name="Opening 1 Height",
                                     items=const.PANEL_HEIGHTS,
@@ -1625,113 +1475,11 @@ class hb_sample_cabinets_OT_opening_cabinet_prompts(bpy.types.Operator):
 
     def check(self, context):
         self.update_product_size(context)
-        self.update_fillers(context)
-        self.update_bridge_parts(context)
+        self.update_fillers(context)    
+        self.update_bridge_parts(context) 
         self.update_materials(context)
         for calculator in self.calculators:
-            calculator.calculate()
-
-        # If this is a base closet, keep the partition (product.obj_z) in sync
-        # with any manual edits to Opening N Height prompts. Compute the max
-        # opening height and use that as the partition height; update the
-        # visible Set Height (total = partition + countertop) without
-        # triggering handlers.
-        if getattr(self, 'is_base', False) and self.closet:
-            try:
-                # find the maximum opening height (meters)
-                max_opening = 0.0
-                for i in range(1,9):
-                    p = self.closet.get_prompt("Opening " + str(i) + " Height")
-                    if p:
-                        try:
-                            v = float(p.get_value())
-                        except Exception:
-                            v = 0.0
-                        if v > max_opening:
-                            max_opening = v
-
-                # enforce sensible minimum
-                if max_opening < 0.25:
-                    max_opening = 0.25
-
-                # update product partition height if different
-                if abs(self.closet.obj_z.location.z - max_opening) > 1e-6:
-                    # suppress handlers while we synchronise fields
-                    self.suspend_updates = True
-                    self.closet.obj_z.location.z = max_opening
-
-                    # compute total and set the operator visible float
-                    try:
-                        ctop_prompt = self.closet.get_prompt("Countertop Thickness")
-                        if ctop_prompt:
-                            ctop_val = float(ctop_prompt.distance_value)
-                        else:
-                            ctop_val = utils_cabinet.get_scene_props(context.scene).countertop_thickness
-                    except Exception:
-                        ctop_val = 0.0
-
-                    try:
-                        self.set_height_float = max_opening + float(ctop_val)
-                    except Exception:
-                        self.set_height_float = max_opening
-
-                    self.suspend_updates = False
-            except Exception:
-                # ensure suspend flag cleared on unexpected error
-                self.suspend_updates = False
-
-            # Additionally, keep Set Depth in sync with any manual edits
-            # to Opening N Depth prompts. Compute the maximum opening depth
-            # and add the Countertop Overhang Front to produce the visible
-            # Set Depth (total cabinet depth). Suppress handlers while
-            # synchronising fields so we don't re-enter update handlers.
-            try:
-                max_opening_depth = 0.0
-                for i in range(1,9):
-                    p = self.closet.get_prompt("Opening " + str(i) + " Depth")
-                    if p:
-                        try:
-                            # prefer distance_value (meters)
-                            v = float(getattr(p, 'distance_value', p.get_value()))
-                        except Exception:
-                            try:
-                                v = float(p.get_value())
-                            except Exception:
-                                v = 0.0
-                        if v > max_opening_depth:
-                            max_opening_depth = v
-
-                # sensible minimum opening depth
-                if max_opening_depth < 0.05:
-                    max_opening_depth = 0.05
-
-                # get countertop overhang front (meters)
-                try:
-                    ctop_oh_prompt = self.closet.get_prompt("Countertop Overhang Front")
-                    if ctop_oh_prompt:
-                        ctop_oh_val = float(getattr(ctop_oh_prompt, 'distance_value', 0.0))
-                    else:
-                        ctop_oh_val = 0.0
-                except Exception:
-                    ctop_oh_val = 0.0
-
-                desired_set_depth = max_opening_depth + float(ctop_oh_val)
-
-                # if the visible set_depth differs, update values while
-                # suppressing handlers to avoid recursion
-                current_depth = math.fabs(self.closet.obj_y.location.y)
-                if abs(current_depth - desired_set_depth) > 1e-6:
-                    self.suspend_updates = True
-                    try:
-                        # update operator visible float and product depth
-                        self.set_depth = desired_set_depth
-                        self.closet.obj_y.location.y = -abs(desired_set_depth)
-                    finally:
-                        self.suspend_updates = False
-            except Exception:
-                # ensure suspend flag cleared on unexpected error
-                self.suspend_updates = False
-
+            calculator.calculate() 
         return True
 
     def execute(self, context):                   
@@ -1756,25 +1504,6 @@ class hb_sample_cabinets_OT_opening_cabinet_prompts(bpy.types.Operator):
         self.is_base = self.closet.is_base
         if self.is_base:
             self.set_depth = math.fabs(self.closet.obj_y.location.y)
-            # initialize editable set height (in meters) from product
-            # compute total = partition (obj_z) + countertop thickness
-            try:
-                partition = float(self.closet.obj_z.location.z)
-            except Exception:
-                partition = 0.0
-            try:
-                ctop_prompt = self.closet.get_prompt("Countertop Thickness")
-                if ctop_prompt:
-                    ctop_val = float(ctop_prompt.distance_value)
-                else:
-                    ctop_val = utils_cabinet.get_scene_props(context.scene).countertop_thickness
-            except Exception:
-                ctop_val = 0.0
-            try:
-                self.suspend_updates = True
-                self.set_height_float = partition + float(ctop_val)
-            finally:
-                self.suspend_updates = False
         self.get_calculators(self.closet.obj_bp)
 
     def draw_product_size(self,layout,context):
@@ -1802,11 +1531,7 @@ class hb_sample_cabinets_OT_opening_cabinet_prompts(bpy.types.Operator):
             row1.label(text='Set Height: ' + value)
         else:
             row1.label(text='Set Height:')
-            # For base closets expose an editable float for precise heights.
-            if self.is_base:
-                row1.prop(self,'set_height_float',text="")
-            else:
-                row1.prop(self,'set_height',text="")
+            row1.prop(self,'set_height',text="")
             row1.prop(self.closet.obj_z,'hide_viewport',text="")
             row1.operator('pc_object.select_object',text="",icon='RESTRICT_SELECT_OFF').obj_name = self.closet.obj_z.name
 
@@ -1990,11 +1715,8 @@ class hb_sample_cabinets_OT_opening_cabinet_prompts(bpy.types.Operator):
                     row.prop(height,'distance_value',text="")
 
                 if self.is_base:
-                    # Make depth editable for base closets (was a read-only label before).
-                    # The FloatProperty `set_depth` is updated in get_assemblies and
-                    # has an update handler `update_closet_depth` that propagates the
-                    # value to the product (obj_y.location and each Opening Depth prompt).
-                    row.prop(self,'set_depth',text="")
+                    value = pc_unit.unit_to_string(unit_settings,depth.distance_value) 
+                    row.label(text=value)
                 else:
                     row.prop(depth,'distance_value',text="")
 
@@ -2065,7 +1787,7 @@ class hb_sample_cabinets_OT_inside_corner_cabinet_prompts(bpy.types.Operator):
         for i in range(1,9):
             opening_height_prompt = self.closet.get_prompt("Opening " + str(i) + " Height")
             if opening_height_prompt:
-                opening_height = round(pc_unit.meter_to_millimeter(opening_height_prompt.get_value()),0 + 'mm')
+                opening_height = round(pc_unit.meter_to_millimeter(opening_height_prompt.get_value()),0)
                 for index, height in enumerate(const.PANEL_HEIGHTS):
                     if not opening_height >= int(height[0]):
                         exec('self.opening_' + str(i) + '_height = const.PANEL_HEIGHTS[index - 1][0]')                                                                                                                                                                                                        

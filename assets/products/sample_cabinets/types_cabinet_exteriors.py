@@ -242,7 +242,7 @@ class Drawers(types_fronts.Fronts):
         
         # Dimensions
         drawer_box.dim_x('x', [x, left_overlay, right_overlay])
-        drawer_box.dim_y('y-0.02', [y]) 
+        drawer_box.dim_y('y-front_thickness', [y, front_thickness])
         drawer_box.dim_z('drawer_front_height-0.05', [drawer_front_height])
         
         # Location
@@ -452,7 +452,7 @@ class Door_Drawer(types_fronts.Fronts):
         l_box.rot_z(value = 0)
         
         # Dimensions
-        l_box.dim_x('IF(add_two_drawer_fronts_var,(x-vertical_gap)/2,x)',[add_two_drawer_fronts_var,x,vertical_gap])
+        l_box.dim_x('IF(add_two_drawer_fronts_var,(x/2-front_thickness/2),x)',[add_two_drawer_fronts_var,x,front_thickness])
         l_box.dim_y('y-front_thickness',[y, front_thickness])
         l_box.dim_z('top_df_height_var-0.05', [top_df_height_var])
         
@@ -502,12 +502,12 @@ class Door_Drawer(types_fronts.Fronts):
         r_box.rot_z(value = 0)
         
         # Dimensions
-        r_box.dim_x('(x-vertical_gap)/2',[x, vertical_gap])
+        r_box.dim_x('x/2-front_thickness/2',[x, front_thickness])
         r_box.dim_y('y-front_thickness',[y, front_thickness])
         r_box.dim_z('top_df_height_var-0.05', [top_df_height_var])
         
         # Positioning
-        r_box.loc_x('x/2+vertical_gap/2',[x, vertical_gap])
+        r_box.loc_x('x/2+front_thickness/2',[x, front_thickness])
         # FIX: Use unique drawer_open_val
         r_box.loc_y('0-(y*(drawer_open_val/100))',[y, drawer_open_val])
         r_box.loc_z('z+front_thickness-0.003-top_df_height_var', [z, to_var, top_df_height_var, front_thickness])

@@ -127,5 +127,3 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
-TestScene/home_builder_4_OK2.zip
-assets/products/sample_cabinets/assemblies/Part.blend1

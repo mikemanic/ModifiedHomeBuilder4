@@ -903,7 +903,6 @@ class Closet_Starter(Closet):
             self.obj_z.location.z = pc_unit.millimeter(2131)
         self.draw()
 
-
 class Closet_Inside_Corner(Closet):
     show_in_library = True
     # category_name = "CLOSETS"
@@ -1247,7 +1246,6 @@ class Closet_Inside_Corner(Closet):
         self.obj_y.location.y = -pc_unit.inch(24)  
         self.obj_z.location.z = pc_unit.millimeter(2131)
         self.draw()
-
 
 class Closet_Inside_Corner_Filler(Closet):
     show_in_library = True

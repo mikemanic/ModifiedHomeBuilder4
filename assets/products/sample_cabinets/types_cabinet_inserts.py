@@ -172,10 +172,10 @@ class Hanging_Rod(Closet_Insert):
 
         self.obj_x.location.x = pc_unit.millimeter(500)
         self.obj_y.location.y = pc_unit.millimeter(300)
-        self.obj_z.location.z = pc_unit.millimeter(1500)
+        self.obj_z.location.z = pc_unit.millimeter(1200)
 
         self.add_prompt("Hanging Rod Location From Top",'DISTANCE',pc_unit.millimeter(50)) 
-        self.add_prompt("Hanging Rod Setback",'DISTANCE',pc_unit.millimeter(250)) 
+        self.add_prompt("Hanging Rod Setback",'DISTANCE',pc_unit.millimeter(200)) 
         self.add_prompt("Shelf Thickness",'DISTANCE',pc_unit.millimeter(18)) 
 
         height = self.obj_z.pyclone.get_var('location.z','height')
@@ -194,6 +194,109 @@ class Hanging_Rod(Closet_Insert):
 
             rod = self.add_hanging_rod()
             rod.loc_z('height-top_opening_height-hanging_rod_location_from_top-s_thickness',[height,top_opening_height,hanging_rod_location_from_top,s_thickness])
+
+            #MID SHELF
+            shelf = assemblies_cabinet.add_closet_part(self)
+            props = utils_cabinet.get_object_props(shelf.obj_bp)
+            props.ebl1 = True                           
+            shelf.obj_bp["IS_SHELF_BP"] = True
+            shelf.obj_bp['ADD_DIMENSION'] = True
+            shelf.set_name('Shelf')
+            shelf.loc_x(value = 0)
+            shelf.loc_y(value = 0)
+            shelf.loc_z('height-top_opening_height-s_thickness',[height,top_opening_height,s_thickness])
+            shelf.rot_y(value = 0)
+            shelf.rot_z(value = 0)
+            shelf.dim_x('x',[x])
+            shelf.dim_y('y-back_inset',[y,back_inset])
+            shelf.dim_z('s_thickness',[s_thickness])
+            pc_utils.flip_normals(shelf)
+
+            top_opening = self.add_opening()
+            top_opening.set_name('Top Opening')
+            top_opening.loc_z('height-top_opening_height',
+                              [height,top_opening_height])
+            top_opening.dim_z('top_opening_height',[top_opening_height])            
+
+            bot_opening = self.add_opening()
+            bot_opening.set_name('Bottom Opening')
+            bot_opening.loc_z(value = 0)
+            bot_opening.dim_z('height-top_opening_height-s_thickness',
+                              [height,top_opening_height,s_thickness])           
+      
+        else:
+            opening = self.add_opening()
+            opening.set_name('Opening')
+            opening.loc_z(value = 0)
+            opening.dim_z('height',[height])    
+
+
+class Lift_Rod(Closet_Insert):
+
+    is_double = False
+
+    def add_lift_rod(self):
+        width = self.obj_x.pyclone.get_var('location.x','width')
+        lift_rod_setback = self.get_prompt("Lift Rod Setback").get_var("lift_rod_setback")
+
+        lift_rod = assemblies_cabinet.add_closet_oval_lift_rod(self)
+        hangers = assemblies_cabinet.add_closet_hangers(self)
+
+        lift_rod.loc_x(value = 0)
+        lift_rod.loc_y('lift_rod_setback',[lift_rod_setback])
+        lift_rod.rot_x(value = 0)
+        lift_rod.rot_y(value = 0)
+        lift_rod.rot_z(value = 0)
+        lift_rod.dim_x('width',[width])
+        lift_rod.dim_y(value = 0)
+        lift_rod.dim_z(value = 0)
+
+        loc_z = lift_rod.obj_bp.pyclone.get_var('location.z','loc_z')
+
+        if hangers:
+            hangers.loc_x(value = 0)
+            hangers.loc_y('lift_rod_setback',[lift_rod_setback])
+            hangers.loc_z('loc_z',[loc_z])
+            hangers.rot_x(value = 0)
+            hangers.rot_y(value = 0)
+            hangers.rot_z(value = 0)
+            hangers.dim_x('width',[width])
+            hangers.dim_y(value = 0)
+            hangers.dim_z(value = 0)  
+        return lift_rod      
+
+    def draw(self):      
+        self.create_assembly()
+        self.add_closet_insert_prompts()      
+        self.obj_bp[const.CLOSET_lift_ROD] = True
+        self.obj_bp[const.INSERT_TAG] = True
+        self.obj_bp["PROMPT_ID"] = "hb_sample_cabinets.lift_rod_prompts"
+        self.obj_bp["MENU_ID"] = "HOME_BUILDER_MT_cabinet_insert_commands"
+
+        self.obj_x.location.x = pc_unit.millimeter(500)
+        self.obj_y.location.y = pc_unit.millimeter(300)
+        self.obj_z.location.z = pc_unit.millimeter(1200)
+
+        self.add_prompt("Lift Rod Location From Top",'DISTANCE',pc_unit.millimeter(50)) 
+        self.add_prompt("Lift Rod Setback",'DISTANCE',pc_unit.millimeter(200)) 
+        self.add_prompt("Shelf Thickness",'DISTANCE',pc_unit.millimeter(18)) 
+
+        height = self.obj_z.pyclone.get_var('location.z','height')
+        x = self.obj_x.pyclone.get_var('location.x','x')
+        y = self.obj_y.pyclone.get_var('location.y','y')
+        lift_rod_location_from_top = self.get_prompt("lift Rod Location From Top").get_var("lift_rod_location_from_top")
+        s_thickness = self.get_prompt("Shelf Thickness").get_var("s_thickness")
+        back_inset = self.get_prompt("Back Inset").get_var("back_inset")
+
+        rod = self.add_lift_rod()
+        rod.loc_z('height-lift_rod_location_from_top',[height,lift_rod_location_from_top])
+
+        if self.is_double:
+            self.add_prompt("Top Opening Height",'DISTANCE',pc_unit.millimeter(100)) 
+            top_opening_height = self.get_prompt("Top Opening Height").get_var("top_opening_height")
+
+            rod = self.add_lift_rod()
+            rod.loc_z('height-top_opening_height-lift_rod_location_from_top-s_thickness',[height,top_opening_height,lift_rod_location_from_top,s_thickness])
 
             #MID SHELF
             shelf = assemblies_cabinet.add_closet_part(self)
