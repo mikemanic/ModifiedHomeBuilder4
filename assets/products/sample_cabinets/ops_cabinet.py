@@ -148,7 +148,7 @@ class hb_sample_cabinets_OT_change_cabinet_offsets(bpy.types.Operator):
             row.prop(self,'right_offset',text="Right")
             row = layout.row()
             row.label(text="Closet Width")
-            row.label(text=str(round(pc_unit.meter_to_inch(self.closet.obj_x.location.x),3)) + '"')
+            row.label(text=str(round(pc_unit.meter_to_millimeter(self.closet.obj_x.location.x),3)) + 'mm')
         elif self.anchor_type == 'FILL':
             row = layout.row()
             row.label(text="Offsets:")
@@ -156,7 +156,7 @@ class hb_sample_cabinets_OT_change_cabinet_offsets(bpy.types.Operator):
             row.prop(self,'fill_right_offset',text="Right")
             row = layout.row()
             row.label(text="Closet Width")
-            row.label(text=str(round(pc_unit.meter_to_inch(self.closet.obj_x.location.x),3)) + '"')
+            row.label(text=str(round(pc_unit.meter_to_millimeter(self.closet.obj_x.location.x),3)) + 'mm')
         else:
             row = layout.row()
             row.label(text="Closet Width:")
